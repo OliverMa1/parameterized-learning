@@ -13,7 +13,9 @@ import verification.FiniteStateSets;
 import verification.InductivenessChecking;
 import verification.SubsetChecking;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class BasicRMCTeacher extends RMCTeacher {
@@ -144,8 +146,39 @@ public class BasicRMCTeacher extends RMCTeacher {
 
     private Automata concatenate(Automata a, Automata b){return null;}
 
-    private Automata attractor_player0(Automata v_0, Automata v_1, Automata reach, EdgeWeightedDigraph T){
-        
-        return null;
+    private Automata attractor_player0(Automata v_0, Automata v_1, Automata reach, EdgeWeightedDigraph T, int wordlength){
+        Map<List<Integer>,Integer> v1_markings = new HashMap<>();
+        //TODO might need a copy method, this just copies the reference...
+        Automata marked = reach;
+        Automata marked_prev = null;
+        // TODO equals method for automata might be required... or just intersection and emptiness check? or save set of
+        // TODO marked vertices and compare sets
+        while(marked.equals(marked_prev)){
+            marked_prev = marked;
+            Automata predecessors = VerificationUtility.getPreImage(T,marked);
+            Automata predecessors_v1 = AutomataUtility.getIntersection(predecessors, v_1);
+            Automata predecessors_v0 = AutomataUtility.getIntersection(predecessors,v_0);
+            List<List<Integer>> v1_predecessor_vertices = AutomataUtility.getWords(predecessors_v1, wordlength);
+            for(List<Integer> v : v1_predecessor_vertices){
+                if(v1_markings.containsKey(v)){
+                   int n = v1_markings.get(v);
+                   if (n-1 == 0){
+                       v1_markings.remove(v);
+                       marked = AutomataUtility.getUnion(marked, produceWordAutomaton(v));
+                   }
+                   else{
+                       v1_markings.put(v,n-1);
+                   }
+                }
+                else{
+                    Automata image_v = VerificationUtility.getImage(v,T,marked.getNumLabels());
+                    int n = AutomataUtility.getWords(image_v,wordlength).size();
+                    v1_markings.put(v,n);
+                }
+            }
+            marked = AutomataUtility.getUnion(marked, predecessors_v0);
+        }
+
+        return marked;
     }
 }
