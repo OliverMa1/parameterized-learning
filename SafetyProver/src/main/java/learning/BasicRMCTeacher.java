@@ -137,4 +137,15 @@ public class BasicRMCTeacher extends RMCTeacher {
         }
         return true;
     }
+
+    // TODO move methods to the right places, finiteautomata/verification utility
+
+    private Automata produceWordAutomaton(List<Integer> word){return null;}
+
+    private Automata concatenate(Automata a, Automata b){return null;}
+
+    private Automata attractor_player0(Automata v_0, Automata v_1, Automata reach, EdgeWeightedDigraph T){
+        
+        return null;
+    }
 }
