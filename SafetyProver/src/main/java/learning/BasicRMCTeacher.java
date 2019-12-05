@@ -152,14 +152,16 @@ public class BasicRMCTeacher extends RMCTeacher {
     }
 
     private Automata concatenate(Automata a, Automata b){return null;}
-
+    private boolean Automata_equality(Automata a, Automata b){
+        return (AutomataUtility.getIntersection(a,AutomataUtility.getComplement(b)).findAcceptingString() == null);
+    }
     private Automata attractor_player0(Automata v_0, Automata v_1, Automata reach, EdgeWeightedDigraph T, int wordlength){
         Map<List<Integer>,Integer> v1_markings = new HashMap<>();
         //TODO might need a copy method, this just copies the reference...
         Automata marked = reach;
         Automata marked_prev = null;
         // TODO equals method for automata might be required... or just intersection and emptiness check? or save set of
-        // TODO marked vertices and compare sets
+        // TODO marked vertices and compare sets, test Automata_equality if problems happen here
         while(marked.equals(marked_prev)){
             marked_prev = marked;
             Automata predecessors = VerificationUtility.getPreImage(T,marked);
