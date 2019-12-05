@@ -13,9 +13,7 @@ import verification.FiniteStateSets;
 import verification.InductivenessChecking;
 import verification.SubsetChecking;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class BasicRMCTeacher extends RMCTeacher {
@@ -142,7 +140,16 @@ public class BasicRMCTeacher extends RMCTeacher {
 
     // TODO move methods to the right places, finiteautomata/verification utility
 
-    private Automata produceWordAutomaton(List<Integer> word){return null;}
+    private Automata produceWordAutomaton(List<Integer> word, int numLetters){
+        Automata result = new Automata(0,word.size()+1,numLetters);
+        for(int i = 0; i< word.size(); i++) {
+            result.addTrans(i, word.get(i), i + 1);
+        }
+        Set<Integer> acceptings = new HashSet<Integer>();
+        acceptings.add(word.size());
+        result.setAcceptingStateIds(acceptings);
+        return result;
+    }
 
     private Automata concatenate(Automata a, Automata b){return null;}
 
@@ -164,7 +171,7 @@ public class BasicRMCTeacher extends RMCTeacher {
                    int n = v1_markings.get(v);
                    if (n-1 == 0){
                        v1_markings.remove(v);
-                       marked = AutomataUtility.getUnion(marked, produceWordAutomaton(v));
+                       marked = AutomataUtility.getUnion(marked, produceWordAutomaton(v, marked.getNumLabels()));
                    }
                    else{
                        v1_markings.put(v,n-1);
