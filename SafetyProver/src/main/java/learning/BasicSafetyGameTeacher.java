@@ -137,4 +137,52 @@ public class BasicSafetyGameTeacher extends SafetyGameTeacher {
         }
         return true;
     }
+
+    /** Initial Check for safety games. Checks if the hypothesis Automaton h is contained in the
+     * initial Automaton i.
+     *
+     * @return List<Integer> example which is a positive counterexample if the check fails or null if the check succeeds
+     */
+    private List<Integer> initialCheck(Automata hypothesis, Automata init){
+        Automata b = AutomataUtility.getDifference(init,hypothesis);
+        return b.findAcceptingString();
+    }
+
+    /**
+     * Bad Check for safety games. Checks if the hypothesis Automaton h intersected with the bad state
+     * Automaton bad is empty.
+     *
+     * @return List of Integer which is a negative counterexample if the check fails or null if the check succeeds.
+     */
+
+    private List<Integer> badCheck(Automata hypothesis, Automata badStates){
+        Automata b = AutomataUtility.getDifference(hypothesis, badStates);
+        return b.findAcceptingString();
+
+    }
+
+    /**
+     * Inductive check for Player 0 in safety games. Checks if the hypothesis Automaton h is closed
+     * under Player 0 transitions.
+     *
+     * @return A tuple of List of Integer (x,y) where x is the Player 0 vertex that violates the property
+     * and y is one of it's successors.
+     */
+
+    private Tuple<List<Integer>> player0_closedness(){
+        return null;
+    }
+
+    /**
+     * Inductive check for Player 1 in safety games. Checks if the hypothesis Automaton h is closed under
+     * Player 1 transitions.
+     *
+     * @return A tuple of List of Integer (x,y) where x is the Player 1 vertex that violates the property
+     * and y is one of it's successors.
+     */
+
+    private Tuple<List<Integer>> player1_closedness(){
+        return null;
+
+    }
 }
