@@ -9,6 +9,7 @@ import common.finiteautomata.Automata;
 import common.finiteautomata.AutomataUtility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import verification.FiniteGames;
 import verification.FiniteStateSets;
 import verification.InductivenessChecking;
 import verification.SubsetChecking;
@@ -19,12 +20,12 @@ import java.util.function.Supplier;
 public class BasicSafetyGameTeacher extends SafetyGameTeacher {
 
     public static final Logger LOGGER = LogManager.getLogger();
-    protected FiniteStateSets finiteStates;
+    protected FiniteGames finiteStates;
     private boolean tryMinimalInvariant = true;
 
     public BasicSafetyGameTeacher(int numLetters, Automata I, Automata B, Automata v_0, Automata v_1, EdgeWeightedDigraph T) {
         super(numLetters,v_0,v_1, I, B, T);
-        finiteStates = new FiniteStateSets(I, T, B);
+        finiteStates = new FiniteGames(v_0,v_1, I, T, B);
     }
 
     private void debug(Supplier<String> msg) {
@@ -46,8 +47,7 @@ public class BasicSafetyGameTeacher extends SafetyGameTeacher {
             throws Timer.TimeoutException {
         Timer.tick();
         boolean isReachable = finiteStates.isReachable(word);
-        boolean isBad = tryMinimalInvariant ?
-                getBadStates().accepts(word) : canReachBadStatesFrom(word);
+        boolean isBad = finiteStates.isBadReachable(word);
 
         String labeledWord = LOGGER.isDebugEnabled() ?
                 NoInvariantException.getLabeledWord(word) : null;
@@ -74,12 +74,19 @@ public class BasicSafetyGameTeacher extends SafetyGameTeacher {
         List<Integer> ex;
 
         // first test: are initial states contained?
-        ex = new SubsetChecking(getInitialStates(), hyp).check();
+        ex = initialCheck(hyp,getInitialStates());
         Timer.tick();
         if (ex != null) {
             if (LOGGER.isDebugEnabled()) {
                 String word = NoInvariantException.getLabeledWord(ex);
                 LOGGER.debug("An initial configuration is not contained in hypothesis: " + word);
+            }
+            boolean reachBad = canReachBadStatesFrom(ex);
+            if (LOGGER.isDebugEnabled()) {
+                if (reachBad) {
+                    String word = NoInvariantException.getLabeledWord(ex);
+                    LOGGER.debug("Initial state is contained in bad: " + word);
+                }
             }
             cex.addPositive(ex);
             return false;
@@ -156,7 +163,7 @@ public class BasicSafetyGameTeacher extends SafetyGameTeacher {
      */
 
     private List<Integer> badCheck(Automata hypothesis, Automata badStates){
-        Automata b = AutomataUtility.getDifference(hypothesis, badStates);
+        Automata b = AutomataUtility.getIntersection(hypothesis, badStates);
         return b.findAcceptingString();
 
     }
@@ -169,9 +176,21 @@ public class BasicSafetyGameTeacher extends SafetyGameTeacher {
      * and y is one of it's successors.
      */
 
-    private Tuple<List<Integer>> player0_closedness(){
-        return null;
-    }
+    private Tuple<List<Integer>> player0_closedness(Automata hypothesis, Automata badStates){
+        // b_1 contains all vertices that have a successor in hypothesis
+        Automata b_1 = VerificationUtility.getPreImage(getTransition(), hypothesis);
+        // b_2 contains all vertices of player 0 that have no successor in hypothesis
+        Automata b_2 = AutomataUtility.getDifference(getPlayer0_vertices(), hypothesis);
+        // b_3 contains contains all vertices of player 0 belonging to the hypothesis that have no successor in hypothesis
+        Automata b_3 = AutomataUtility.getIntersection(b_2,hypothesis);
+        List<Integer> u = b_3.findAcceptingString();
+        if (u == null){
+            return null;
+        }
+        Automata successors_of_u = VerificationUtility.getImage(u,getTransition(),getNumLetters());
+        List<Integer> one_successor = successors_of_u.findAcceptingString();
+        return new Tuple<>(u, one_successor);
+       }
 
     /**
      * Inductive check for Player 1 in safety games. Checks if the hypothesis Automaton h is closed under
@@ -181,8 +200,21 @@ public class BasicSafetyGameTeacher extends SafetyGameTeacher {
      * and y is one of it's successors.
      */
 
-    private Tuple<List<Integer>> player1_closedness(){
-        return null;
-
+    private Tuple<List<Integer>> player1_closedness(Automata hypothesis){
+        // b_1 contains all vertices not in b_1
+        Automata b_1 = AutomataUtility.getDifference(AutomataUtility.getUnion(getPlayer0_vertices(),getPlayer1_vertices()), hypothesis);
+        // b_2 contains all vertices that have a successor not belonging to hypothesis
+        Automata b_2 = VerificationUtility.getPreImage(getTransition(), b_1);
+        // b_3 contains all vertices of player 1 in hypothesis with at least on successor not in hypothesis
+        Automata b_3 = AutomataUtility.getIntersection(AutomataUtility.getIntersection(getPlayer1_vertices(),hypothesis),b_2);
+        List<Integer> u = b_3.findAcceptingString();
+        if (u == null){
+            return null;
+        }
+        // TODO maybe save successors or return multiple ones instead of redoing computation
+        Automata successor_of_u = AutomataUtility.getDifference(VerificationUtility.getImage(u,getTransition(),getNumLetters()), hypothesis);
+        // TODO maybe problem with termination if the same successor gets picked out again?
+        List<Integer> one_successor = successor_of_u.findAcceptingString();
+        return new Tuple<>(u,one_successor);
     }
 }
