@@ -86,6 +86,7 @@ public class BasicSafetyGameTeacher extends SafetyGameTeacher {
                 if (reachBad) {
                     String word = NoInvariantException.getLabeledWord(ex);
                     LOGGER.debug("Initial state is contained in bad: " + word);
+                    throw new NoInvariantException(ex, getInitialStates(), getTransition());
                 }
             }
             cex.addPositive(ex);
@@ -104,24 +105,9 @@ public class BasicSafetyGameTeacher extends SafetyGameTeacher {
             cex.addNegative(ex);
             return false;
         }
-        /*
-        // third test: are concrete unreachable configurations excluded?
-        for (int l = 0; l <= explicitExplorationDepth; ++l) {
-            sc = new SubsetChecking(
-                    AutomataConverter.getWordAutomaton(hyp, l),
-                    finiteStates.getReachableStateAutomaton(l));
-            cex = sc.check();
-            Timer.tick();
-            if (cex != null) {
-                LOGGER.debug("An unreachable configuration is contained in hypothesis: " + cex);
-                negCEX.add(cex);
-                return false;
-            }
-        }
-        */
-        // fourth test: is the invariant inductive?
-        InductivenessChecking ic = new InductivenessChecking(hyp, getTransition(), getNumLetters());
-        Tuple<List<Integer>> xy = ic.check();
+
+        // player 0 test: is the invariant inductive?
+        Tuple<List<Integer>> xy = player0_closedness(hyp);
         Timer.tick();
         if (xy != null) {
             String x = null, y = null;
@@ -131,9 +117,31 @@ public class BasicSafetyGameTeacher extends SafetyGameTeacher {
                 y = NoInvariantException.getLabeledWord(xy.y);
                 LOGGER.debug(x + " => " + y);
             }
-            boolean addPositive = tryMinimalInvariant ?
-                    finiteStates.isReachable(xy.x) : !canReachBadStatesFrom(xy.y);
-            if (addPositive) {
+            // TODO might be a bug to check y?
+            boolean addPositive = finiteStates.isBadReachable(xy.y);
+            if (!addPositive) {
+                LOGGER.debug("* Configuration " + y + " should be included in the hypothesis.");
+                cex.addPositive(xy.y);
+            } else {
+                LOGGER.debug("* Configuration " + x + " should be excluded from the hypothesis.");
+                cex.addNegative(xy.x);
+            }
+            return false;
+        }
+
+        // player 1 test: is the invariant inductive? TODO: return more than one cex?
+        xy = player1_closedness(hyp);
+        Timer.tick();
+        if (xy != null) {
+            String x = null, y = null;
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Hypothesis is not inductive: ");
+                x = NoInvariantException.getLabeledWord(xy.x);
+                y = NoInvariantException.getLabeledWord(xy.y);
+                LOGGER.debug(x + " => " + y);
+            }
+            boolean addPositive = finiteStates.isBadReachable(xy.x);
+            if (!addPositive) {
                 LOGGER.debug("* Configuration " + y + " should be included in the hypothesis.");
                 cex.addPositive(xy.y);
             } else {
@@ -176,7 +184,7 @@ public class BasicSafetyGameTeacher extends SafetyGameTeacher {
      * and y is one of it's successors.
      */
 
-    private Tuple<List<Integer>> player0_closedness(Automata hypothesis, Automata badStates){
+    private Tuple<List<Integer>> player0_closedness(Automata hypothesis){
         // b_1 contains all vertices that have a successor in hypothesis
         Automata b_1 = VerificationUtility.getPreImage(getTransition(), hypothesis);
         // b_2 contains all vertices of player 0 that have no successor in hypothesis
