@@ -73,7 +73,7 @@ public class FiniteGames {
     }
 
     public Automata getAttractor_player0_toState(int wordLen, Automata reach) {
-        Automata marked = null;
+        Automata marked;
         LOGGER.debug("computing automaton describing reachable configurations of length " + wordLen);
 
         Map<List<Integer>,Integer> v1_markings = new HashMap<>();
@@ -115,6 +115,7 @@ public class FiniteGames {
         if (I.accepts(word)){
             return true;
         }
+        // TODO make I finite?
         Automata attractor_of_word = getAttractor_player0_toState(word.size(), produceWordAutomaton(word, word.size()));
         return ((AutomataUtility.getIntersection(I,attractor_of_word)).findAcceptingString() !=null);
     }

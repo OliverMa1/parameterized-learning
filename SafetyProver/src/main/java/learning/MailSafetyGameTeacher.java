@@ -14,7 +14,10 @@ import verification.FiniteStateSets;
 import verification.InductivenessChecking;
 import verification.SubsetChecking;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class MailSafetyGameTeacher extends SafetyGameTeacher {
@@ -106,8 +109,9 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
             return false;
         }
 
-        // player 0 test: is the invariant inductive? TODO player0 mail implementation
-        Tuple<List<Integer>> xy = player0_closedness(hyp);
+        // player 0 test: is the invariant inductive?
+        List<Automata> player0_successors = new LinkedList<>();
+        Tuple<List<Integer>> xy = player0_closedness(hyp,player0_successors);
         Timer.tick();
         if (xy != null) {
             String x = null, y = null;
@@ -117,16 +121,28 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
                 y = NoInvariantException.getLabeledWord(xy.y);
                 LOGGER.debug(x + " => " + y);
             }
-            // TODO might be a bug to check y?
-            boolean addPositive = finiteStates.isBadReachable(xy.y);
-            if (!addPositive) {
-                LOGGER.debug("* Configuration " + y + " should be included in the hypothesis.");
-                cex.addPositive(xy.y);
-            } else {
+            boolean isReachable = finiteStates.isReachable(xy.x);
+            if (!isReachable){
                 LOGGER.debug("* Configuration " + x + " should be excluded from the hypothesis.");
                 cex.addNegative(xy.x);
+                return false;
             }
-            return false;
+            else {
+                List<List<Integer>> all_successors = AutomataUtility.getWords(player0_successors.get(0),xy.x.size());
+                for (List<Integer> word : all_successors){
+                    boolean addNegative = finiteStates.isBadReachable(word);
+                    if (!addNegative) {
+                        LOGGER.debug("* Configuration " + y + " should be included in the hypothesis.");
+                        cex.addPositive(word);
+                        return false;
+                    } else {
+                        LOGGER.debug("* Need to look for other successors");
+                    }
+                }
+                LOGGER.debug("* Configuration " + x + " should be excluded in the hypothesis.");
+                cex.addNegative(xy.x);
+                return false;
+            }
         }
 
         // player 1 test: is the invariant inductive? TODO: return more than one cex?
@@ -191,7 +207,7 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
      * and y is one of it's successors.
      */
 
-    private Tuple<List<Integer>> player0_closedness(Automata hypothesis){
+    private Tuple<List<Integer>> player0_closedness(Automata hypothesis, List<Automata> player0_successors){
         // b_1 contains all vertices that have a successor in hypothesis
         Automata b_1 = VerificationUtility.getPreImage(getTransition(), hypothesis);
         // b_2 contains all vertices of player 0 that have no successor in hypothesis
@@ -203,6 +219,7 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
             return null;
         }
         Automata successors_of_u = VerificationUtility.getImage(u,getTransition(),getNumLetters());
+        player0_successors.add(successors_of_u);
         List<Integer> one_successor = successors_of_u.findAcceptingString();
         return new Tuple<>(u, one_successor);
     }
