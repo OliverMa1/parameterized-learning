@@ -17,8 +17,9 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
       r = combine(p.maybeclosed_.accept(this, arg), r, arg);
       r = combine(p.transducerrule_.accept(this, arg), r, arg);
       r = combine(p.automatonrule_2.accept(this, arg), r, arg);
-      for (VerifierOption x : p.listverifieroption_) {
-        r = combine(x.accept(this,arg), r, arg);
+      for (VerifierOption x : p.listverifieroption_)
+      {
+        r = combine(x.accept(this, arg), r, arg);
       }
       return r;
     }
@@ -27,8 +28,9 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
     public R visit(grammar.Absyn.Transducer p, A arg) {
       R r = leaf(arg);
       r = combine(p.initrule_.accept(this, arg), r, arg);
-      for (TransitionRule x : p.listtransitionrule_) {
-        r = combine(x.accept(this,arg), r, arg);
+      for (TransitionRule x : p.listtransitionrule_)
+      {
+        r = combine(x.accept(this, arg), r, arg);
       }
       r = combine(p.acceptingrule_.accept(this, arg), r, arg);
       return r;
@@ -58,8 +60,9 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
     }
     public R visit(grammar.Absyn.LoopingTransition p, A arg) {
       R r = leaf(arg);
-      for (Name x : p.listname_) {
-        r = combine(x.accept(this,arg), r, arg);
+      for (Name x : p.listname_)
+      {
+        r = combine(x.accept(this, arg), r, arg);
       }
       return r;
     }
@@ -67,8 +70,9 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
 /* AcceptingRule */
     public R visit(grammar.Absyn.TransducerAccepting p, A arg) {
       R r = leaf(arg);
-      for (Name x : p.listname_) {
-        r = combine(x.accept(this,arg), r, arg);
+      for (Name x : p.listname_)
+      {
+        r = combine(x.accept(this, arg), r, arg);
       }
       return r;
     }
@@ -77,8 +81,9 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
     public R visit(grammar.Absyn.Automaton p, A arg) {
       R r = leaf(arg);
       r = combine(p.automatainitrule_.accept(this, arg), r, arg);
-      for (AutomataTransitionRule x : p.listautomatatransitionrule_) {
-        r = combine(x.accept(this,arg), r, arg);
+      for (AutomataTransitionRule x : p.listautomatatransitionrule_)
+      {
+        r = combine(x.accept(this, arg), r, arg);
       }
       r = combine(p.automataacceptingsrule_.accept(this, arg), r, arg);
       return r;
@@ -109,8 +114,9 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
 /* AutomataAcceptingsRule */
     public R visit(grammar.Absyn.AutomataAcceptings p, A arg) {
       R r = leaf(arg);
-      for (Name x : p.listname_) {
-        r = combine(x.accept(this,arg), r, arg);
+      for (Name x : p.listname_)
+      {
+        r = combine(x.accept(this, arg), r, arg);
       }
       return r;
     }
@@ -130,8 +136,9 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
     }
     public R visit(grammar.Absyn.SymmetryOptions p, A arg) {
       R r = leaf(arg);
-      for (SymmetryOption x : p.listsymmetryoption_) {
-        r = combine(x.accept(this,arg), r, arg);
+      for (SymmetryOption x : p.listsymmetryoption_)
+      {
+        r = combine(x.accept(this, arg), r, arg);
       }
       return r;
     }
@@ -167,8 +174,9 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
     }
     public R visit(grammar.Absyn.RotationWithSymmetry p, A arg) {
       R r = leaf(arg);
-      for (Name x : p.listname_) {
-        r = combine(x.accept(this,arg), r, arg);
+      for (Name x : p.listname_)
+      {
+        r = combine(x.accept(this, arg), r, arg);
       }
       return r;
     }

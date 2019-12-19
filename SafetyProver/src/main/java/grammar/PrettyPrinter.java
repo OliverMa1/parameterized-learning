@@ -5,6 +5,7 @@ public class PrettyPrinter
 {
   //For certain applications increasing the initial size of the buffer may improve performance.
   private static final int INITIAL_BUFFER_SIZE = 128;
+  private static final int INDENT_WIDTH = 2;
   //You may wish to change the parentheses used in precedence.
   private static final String _L_PAREN = new String("(");
   private static final String _R_PAREN = new String(")");
@@ -16,7 +17,7 @@ public class PrettyPrinter
        buf_.append("\n");
        indent();
        buf_.append(s);
-       _n_ = _n_ + 2;
+       _n_ = _n_ + INDENT_WIDTH;
        buf_.append("\n");
        indent();
     }
@@ -30,9 +31,11 @@ public class PrettyPrinter
     }
     else if (s.equals("}"))
     {
-       _n_ = _n_ - 2;
-       backup();
-       backup();
+       int t;
+       _n_ = _n_ - INDENT_WIDTH;
+       for(t=0; t<INDENT_WIDTH; t++) {
+         backup();
+       }
        buf_.append(s);
        buf_.append("\n");
        indent();
@@ -591,14 +594,13 @@ public class PrettyPrinter
   {
      for (java.util.Iterator<VerifierOption> it = foo.iterator(); it.hasNext();)
      {
-       pp(it.next(), 0);
+       pp(it.next(), _i_);
        if (it.hasNext()) {
          render(";");
        } else {
          render(";");
        }
-     }
-  }
+     }  }
 
   private static void pp(grammar.Absyn.SymmetryOption foo, int _i_)
   {
@@ -625,14 +627,13 @@ public class PrettyPrinter
   {
      for (java.util.Iterator<SymmetryOption> it = foo.iterator(); it.hasNext();)
      {
-       pp(it.next(), 0);
+       pp(it.next(), _i_);
        if (it.hasNext()) {
          render(",");
        } else {
          render("");
        }
-     }
-  }
+     }  }
 
   private static void pp(grammar.Absyn.MaybeClosed foo, int _i_)
   {
@@ -674,40 +675,37 @@ public class PrettyPrinter
   {
      for (java.util.Iterator<TransitionRule> it = foo.iterator(); it.hasNext();)
      {
-       pp(it.next(), 0);
+       pp(it.next(), _i_);
        if (it.hasNext()) {
          render(";");
        } else {
          render("");
        }
-     }
-  }
+     }  }
 
   private static void pp(grammar.Absyn.ListAutomataTransitionRule foo, int _i_)
   {
      for (java.util.Iterator<AutomataTransitionRule> it = foo.iterator(); it.hasNext();)
      {
-       pp(it.next(), 0);
+       pp(it.next(), _i_);
        if (it.hasNext()) {
          render(";");
        } else {
          render("");
        }
-     }
-  }
+     }  }
 
   private static void pp(grammar.Absyn.ListName foo, int _i_)
   {
      for (java.util.Iterator<Name> it = foo.iterator(); it.hasNext();)
      {
-       pp(it.next(), 0);
+       pp(it.next(), _i_);
        if (it.hasNext()) {
          render(",");
        } else {
          render("");
        }
-     }
-  }
+     }  }
 
 
   private static void sh(grammar.Absyn.ModelRule foo)

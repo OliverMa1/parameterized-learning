@@ -12,7 +12,7 @@ public class Test
     parser p;
     try
     {
-      if (args.length == 0) l = new Yylex(System.in);
+      if (args.length == 0) l = new Yylex(new InputStreamReader(System.in));
       else l = new Yylex(new FileReader(args[0]));
     }
     catch(FileNotFoundException e)
@@ -23,7 +23,11 @@ public class Test
     p = new parser(l);
     /* The default parser is the first-defined entry point. */
     /* You may want to change this. Other options are: */
-    /* pTransducerRule, pInitRule, pTransitionRule, pAcceptingRule, pAutomatonRule, pAutomataInitRule, pAutomataTransitionRule, pAutomataAcceptingsRule, pVerifierOption, pListVerifierOption, pSymmetryOption, pListSymmetryOption, pMaybeClosed, pName, pListTransitionRule, pListAutomataTransitionRule, pListName */
+    /* pTransducerRule, pInitRule, pTransitionRule, pAcceptingRule,
+       pAutomatonRule, pAutomataInitRule, pAutomataTransitionRule,
+       pAutomataAcceptingsRule, pVerifierOption, pListVerifierOption,
+       pSymmetryOption, pListSymmetryOption, pMaybeClosed, pName,
+       pListTransitionRule, pListAutomataTransitionRule, pListName */
     try
     {
       grammar.Absyn.ModelRule parse_tree = p.pModelRule();
