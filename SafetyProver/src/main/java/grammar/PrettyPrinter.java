@@ -348,6 +348,10 @@ public class PrettyPrinter
        pp(_model.transducerrule_, 0);
        render("Bad");
        pp(_model.automatonrule_2, 0);
+       render("P0");
+       pp(_model.automatonrule_3, 0);
+       render("P1");
+       pp(_model.automatonrule_4, 0);
        pp(_model.listverifieroption_, 0);
        if (_i_ > 0) render(_R_PAREN);
     }
@@ -719,6 +723,8 @@ public class PrettyPrinter
        sh(_model.maybeclosed_);
        sh(_model.transducerrule_);
        sh(_model.automatonrule_2);
+       sh(_model.automatonrule_3);
+       sh(_model.automatonrule_4);
        render("[");
        sh(_model.listverifieroption_);
        render("]");

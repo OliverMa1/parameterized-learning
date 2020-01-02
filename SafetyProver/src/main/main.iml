@@ -70,5 +70,14 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="jalf" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/java/parser/java-cup-11a.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

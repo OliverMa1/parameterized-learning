@@ -29,7 +29,7 @@ public class AllVisitorImpl implements AllVisitor<Object, RegularModel> {
         p.maybeclosed_.accept(this, arg);
         Automata F = (Automata) p.automatonrule_2.accept(this, arg);
         EdgeWeightedDigraph T = (EdgeWeightedDigraph) p.transducerrule_.accept(this, arg);
-
+        // TODO Add P0 and P1 Automata rules
         for (VerifierOption o : p.listverifieroption_)
             o.accept(this, arg);
 

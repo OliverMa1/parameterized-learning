@@ -25,12 +25,14 @@ public class ComposVisitor<A> implements
       MaybeClosed maybeclosed_ = p.maybeclosed_.accept(this, arg);
       TransducerRule transducerrule_ = p.transducerrule_.accept(this, arg);
       AutomatonRule automatonrule_2 = p.automatonrule_2.accept(this, arg);
+      AutomatonRule automatonrule_3 = p.automatonrule_3.accept(this, arg);
+      AutomatonRule automatonrule_4 = p.automatonrule_4.accept(this, arg);
       ListVerifierOption listverifieroption_ = new ListVerifierOption();
       for (VerifierOption x : p.listverifieroption_)
       {
         listverifieroption_.add(x.accept(this,arg));
       }
-      return new grammar.Absyn.Model(automatonrule_1, maybeclosed_, transducerrule_, automatonrule_2, listverifieroption_);
+      return new grammar.Absyn.Model(automatonrule_1, maybeclosed_, transducerrule_, automatonrule_2, automatonrule_3, automatonrule_4, listverifieroption_);
     }
 /* TransducerRule */
     public TransducerRule visit(grammar.Absyn.Transducer p, A arg)
