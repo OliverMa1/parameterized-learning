@@ -2,6 +2,8 @@ Model. ModelRule ::= "Initial" AutomatonRule
                      MaybeClosed
                      "Transition" TransducerRule
                      "Bad" AutomatonRule
+                     "P0" AutomatonRule
+                     "P1" AutomatonRule
                      [VerifierOption];
 
 --                     StateTransducerRule
