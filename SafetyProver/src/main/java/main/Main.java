@@ -269,6 +269,14 @@ public class Main {
                 + " #L: " + model.getB().getNumLabels()
                 + "\t#S: " + model.getB().getNumStates()
                 + "\t#T: " + model.getB().getNumTransitions());
+        System.out.println("[P0]"
+                + " #L: " + model.getP0().getNumLabels()
+                + "\t#S: " + model.getP0().getNumStates()
+                + "\t#T: " + model.getP0().getNumTransitions());
+        System.out.println("[P1]"
+                + " #L: " + model.getP1().getNumLabels()
+                + "\t#S: " + model.getP1().getNumStates()
+                + "\t#T: " + model.getP1().getNumTransitions());
         Timer.TimeoutException timeoutException = null;
         MonolithicLearning classroom = null;
         try {
@@ -280,6 +288,7 @@ public class Main {
             switch (mode) {
                 case HOMEBREW:
                     Learner learner = new LStarLearner();
+                    // TODO replace teacher
                     Teacher teacher = new BasicRMCTeacher(model.getNumberOfLetters(),
                             model.getI(), model.getB(), model.getT());
                     classroom = new MonolithicLearning(learner, teacher);

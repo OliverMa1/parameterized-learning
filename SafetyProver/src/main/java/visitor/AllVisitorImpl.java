@@ -29,7 +29,8 @@ public class AllVisitorImpl implements AllVisitor<Object, RegularModel> {
         p.maybeclosed_.accept(this, arg);
         Automata F = (Automata) p.automatonrule_2.accept(this, arg);
         EdgeWeightedDigraph T = (EdgeWeightedDigraph) p.transducerrule_.accept(this, arg);
-        // TODO Add P0 and P1 Automata rules
+        Automata P0 = (Automata) p.automatonrule_3.accept(this, arg);
+        Automata P1 = (Automata) p.automatonrule_4.accept(this, arg);
         for (VerifierOption o : p.listverifieroption_)
             o.accept(this, arg);
 
@@ -37,11 +38,14 @@ public class AllVisitorImpl implements AllVisitor<Object, RegularModel> {
 
         I.setNumLabels(numLabels);
         F.setNumLabels(numLabels);
-
+        P0.setNumLabels(numLabels);
+        P1.setNumLabels(numLabels);
         //set mapping of Label
         arg.setI(I);
         arg.setB(F);
         arg.setT(T);
+        arg.setP0(P0);
+        arg.setP1(P1);
         arg.setLabelToIndex(labelToIndex);
         arg.setNumberOfLetters(numLabels);
 

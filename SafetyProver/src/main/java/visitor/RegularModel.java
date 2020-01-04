@@ -9,6 +9,8 @@ public class RegularModel {
     private Automata I;
     private Automata B;
     private EdgeWeightedDigraph T;
+    private Automata P0;
+    private Automata P1;
 
     private Map<String, Integer> labelToIndex = new HashMap<String, Integer>();
     private int numberOfLetters;
@@ -61,6 +63,22 @@ public class RegularModel {
 
     public void setT(EdgeWeightedDigraph transition) {
         this.T = transition;
+    }
+
+    public Automata getP0() {
+        return P0;
+    }
+
+    public void setP0(Automata p0) {
+        P0 = p0;
+    }
+
+    public Automata getP1() {
+        return P1;
+    }
+
+    public void setP1(Automata p1) {
+        P1 = p1;
     }
 
     public void setLabelToIndex(Map<String, Integer> labelToIndex) {
