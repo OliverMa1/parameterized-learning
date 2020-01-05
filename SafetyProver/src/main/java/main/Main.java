@@ -287,9 +287,11 @@ public class Main {
             //if(problem.getPrecomputedInv()) {
             switch (mode) {
                 case HOMEBREW:
+                    System.out.println("Starting Learner and Teacher Init");
                     Learner learner = new LStarLearner();
                     Teacher teacher = new MailSafetyGameTeacher(model.getNumberOfLetters(), model.getI(), model.getB(), model.getP0(), model.getP1(), model.getT());
                     classroom = new MonolithicLearning(learner, teacher);
+                    System.out.println("Learner and Teacher Init success");
                     invariant = classroom.infer();
                     break;
                 case LIBALF:

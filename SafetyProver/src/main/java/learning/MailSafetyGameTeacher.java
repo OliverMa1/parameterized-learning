@@ -28,6 +28,11 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
 
     public MailSafetyGameTeacher(int numLetters, Automata I, Automata B, Automata v_0, Automata v_1, EdgeWeightedDigraph T) {
         super(numLetters,v_0,v_1, I, B, T);
+        LOGGER.debug(B.prettyPrint("\n--------------\nConstruct B", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+        LOGGER.debug(I.prettyPrint("\n--------------\nConstruct I", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+        LOGGER.debug(v_0.prettyPrint("\n--------------\nConstruct P0", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+        LOGGER.debug(v_1.prettyPrint("\n--------------\nConstruct P1", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+
         finiteStates = new FiniteGames(v_0,v_1, I, T, B);
     }
 
@@ -41,17 +46,16 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
         tryMinimalInvariant = trymin;
     }
 
-    private boolean canReachBadStatesFrom(List<Integer> word) {
-        return VerificationUtility.
-                findSomeTrace(word, getBadStates(), getTransition()) != null;
-    }
-
     public boolean isAccepted(List<Integer> word)
             throws Timer.TimeoutException {
+        System.out.println("MailsafetyGameTeacher: isAccepted() called with word " + word);
         Timer.tick();
+        System.out.println("MailsafetyGameTeacher: checking reachable states of word" + word);
         boolean isReachable = finiteStates.isReachable(word);
+        System.out.println("MailsafetyGameTeacher: checking if word" + word + " can reach bad states");
         boolean isBad = finiteStates.isBadReachable(word);
 
+        System.out.println("MailSafetyGameTeacher: is debug enabled?: " + LOGGER.isDebugEnabled());
         String labeledWord = LOGGER.isDebugEnabled() ?
                 NoInvariantException.getLabeledWord(word) : null;
 
@@ -82,15 +86,16 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
         if (ex != null) {
             if (LOGGER.isDebugEnabled()) {
                 String word = NoInvariantException.getLabeledWord(ex);
-                LOGGER.debug("An initial configuration is not contained in hypothesis: " + word);
+                LOGGER.debug("Line 89: An initial configuration is not contained in hypothesis: " + word);
             }
-            boolean reachBad = canReachBadStatesFrom(ex);
-            if (LOGGER.isDebugEnabled()) {
-                if (reachBad) {
-                    String word = NoInvariantException.getLabeledWord(ex);
-                    LOGGER.debug("Initial state is contained in bad: " + word);
-                    throw new NoInvariantException(ex, getInitialStates(), getTransition());
+            boolean reachBad = finiteStates.isBadReachable(ex);
+
+            if (reachBad) {
+                String word = NoInvariantException.getLabeledWord(ex);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Line 95: Initial state is contained in bad: " + word + " ");
                 }
+                throw new NoInvariantException(ex, getInitialStates(), getTransition());
             }
             cex.addPositive(ex);
             return false;

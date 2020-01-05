@@ -37,6 +37,9 @@ public class FiniteGames {
             Map<List<Integer>,Integer> v0_markings = new HashMap<>();
             //TODO might need a copy method, this just copies the reference...
             marked = AutomataUtility.getWordAutomaton(B, wordLen);
+            LOGGER.debug(B.prettyPrint("\n--------------\nPlayer 1 Attractor which can reach Bad:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+
+            LOGGER.debug(marked.prettyPrint("\n--------------\n Initially marked words:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
             Automata marked_prev = marked;
             // TODO equals method for automata might be required... or just intersection and emptiness check? or save set of
             // TODO marked vertices and compare sets, test Automata_equality if problems happen here
@@ -67,6 +70,8 @@ public class FiniteGames {
             }
 
             reachableStateAutomata.put(wordLen, marked);
+
+            LOGGER.debug(marked.prettyPrint("\n--------------\nPlayer 1 Attractor which can reach Bad:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
             return marked;
         }
         return marked;
@@ -82,7 +87,9 @@ public class FiniteGames {
         Automata marked_prev = marked;
         // TODO equals method for automata might be required... or just intersection and emptiness check? or save set of
         // TODO marked vertices and compare sets, test Automata_equality if problems happen here
+        LOGGER.debug("First While loop entry marked: " + marked + " marked_prev:" + marked_prev);
         while(Automata_equality(marked,marked_prev)){
+            LOGGER.debug("While loop entered marked: \n" + marked + " \n marked_prev:" + marked_prev + "\n ------------------------ \n");
             marked_prev = marked;
             Automata predecessors = VerificationUtility.getPreImage(T,marked);
             Automata predecessors_v1 = AutomataUtility.getIntersection(predecessors, v_1);
@@ -116,12 +123,17 @@ public class FiniteGames {
             return true;
         }
         // TODO make I finite?
+        LOGGER.debug("Player 0 attractor computation starting");
         Automata attractor_of_word = getAttractor_player0_toState(word.size(), produceWordAutomaton(word, word.size()));
         return ((AutomataUtility.getIntersection(I,attractor_of_word)).findAcceptingString() !=null);
     }
 
     public boolean isBadReachable(List<Integer> word){
-        return getAttractor_player1_toBad(word.size()).accepts(word);
+        String ex = NoInvariantException.getLabeledWord(word);
+        LOGGER.debug("\nPlayer 1 attractor computation starting for: " + ex);
+        boolean result =  getAttractor_player1_toBad(word.size()).accepts(word);
+        LOGGER.debug(" is bad reachable? : " + result);
+        return result;
     }
 
     private Automata produceWordAutomaton(List<Integer> word, int numLetters){
@@ -136,10 +148,11 @@ public class FiniteGames {
     }
 
     private Automata concatenate(Automata a, Automata b){return null;}
+
     private boolean Automata_equality(Automata a, Automata b){
         if (a == null || b == null){
             return false;
         }
-        return (AutomataUtility.getIntersection(a,AutomataUtility.getComplement(b)).findAcceptingString() == null);
+        return !(AutomataUtility.getIntersection(a,AutomataUtility.getComplement(b)).findAcceptingString() == null);
     }
 }

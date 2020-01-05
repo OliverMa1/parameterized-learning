@@ -20,7 +20,7 @@
 
 // Notice that for nim-sum to be 0, then every binary position the three
 // number must sum up to 0.
-I {
+Initial {
     init: si;
 
     si -> s0 E;
@@ -32,49 +32,7 @@ I {
     accepting: s0;
 }    
 
-B {
-    init: s0;
-
-    s0 -> s1 S;
-    s1 -> s1 000;
-    accepting: s1;
-}
-
-P0 {
-    init: si;
-
-    si -> s0 S;
-    s0 -> s0 000;
-    s0 -> s0 001;
-    s0 -> s0 010;
-    s0 -> s0 011;
-    s0 -> s0 100;
-    s0 -> s0 101;
-    s0 -> s0 110;
-    s0 -> s0 111;
-
-    accepting: s0;
-
-}
-
-P1 {
-    init: si;
-
-    si -> s0 E;
-    s0 -> s0 000;
-    s0 -> s0 001;
-    s0 -> s0 010;
-    s0 -> s0 011;
-    s0 -> s0 100;
-    s0 -> s0 101;
-    s0 -> s0 110;
-    s0 -> s0 111;
-
-    accepting: s0;
-
-}
-
-T {
+Transition {
     init: si;
 
     // Empty P0
@@ -312,6 +270,50 @@ T {
 
     accepting: s1, e1, p2, q2, r2, a2, b2, c2;
 }
+
+Bad {
+    init: s0;
+
+    s0 -> s1 S;
+    s1 -> s1 000;
+    accepting: s1;
+}
+
+P0 {
+    init: si;
+
+    si -> s0 S;
+    s0 -> s0 000;
+    s0 -> s0 001;
+    s0 -> s0 010;
+    s0 -> s0 011;
+    s0 -> s0 100;
+    s0 -> s0 101;
+    s0 -> s0 110;
+    s0 -> s0 111;
+
+    accepting: s0;
+
+}
+
+P1 {
+    init: si;
+
+    si -> s0 E;
+    s0 -> s0 000;
+    s0 -> s0 001;
+    s0 -> s0 010;
+    s0 -> s0 011;
+    s0 -> s0 100;
+    s0 -> s0 101;
+    s0 -> s0 110;
+    s0 -> s0 111;
+
+    accepting: s0;
+
+}
+
+
 
 transducerStateGuessing: 1 .. 10;
 automatonStateGuessing: 0 .. 4;

@@ -22,6 +22,7 @@ public class MonolithicLearning {
             throws Timer.TimeoutException {
         learner.setTeacher(new TeacherDecorator());
         learner.setup();
+        System.out.println("MonolithicLearning: Learner has been setup successfully");
         return learner.solve();
     }
 
