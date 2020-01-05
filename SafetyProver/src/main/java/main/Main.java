@@ -288,9 +288,7 @@ public class Main {
             switch (mode) {
                 case HOMEBREW:
                     Learner learner = new LStarLearner();
-                    // TODO replace teacher
-                    Teacher teacher = new BasicRMCTeacher(model.getNumberOfLetters(),
-                            model.getI(), model.getB(), model.getT());
+                    Teacher teacher = new MailSafetyGameTeacher(model.getNumberOfLetters(), model.getI(), model.getB(), model.getP0(), model.getP1(), model.getT());
                     classroom = new MonolithicLearning(learner, teacher);
                     invariant = classroom.infer();
                     break;
