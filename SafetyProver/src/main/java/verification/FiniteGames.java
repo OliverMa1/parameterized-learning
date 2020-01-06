@@ -89,7 +89,7 @@ public class FiniteGames {
 
         Map<List<Integer>,Integer> v1_markings = new HashMap<>();
         // TODO make reach complete automaton... and probably Bad as well above
-        reach = AutomataUtility.toCompleteDFA(reach);
+        //reach = AutomataUtility.toCompleteDFA(reach);
         //TODO might need a copy method, this just copies the reference...
         marked = AutomataUtility.getWordAutomaton(reach, wordLen);
         Automata marked_prev = null;
@@ -125,9 +125,9 @@ public class FiniteGames {
                     if (n-1 == 0){
                         v1_markings.remove(v);
                         LOGGER.debug(marked.prettyPrint("Marked before change", NoInvariantException.getIndexToLabelMapping()));
-                        Automata test = produceWordAutomaton(v, marked.getNumLabels());
+                        Automata test = produceWordAutomaton(v, I.getNumLabels());
                         LOGGER.debug(test.prettyPrint("Test before change", NoInvariantException.getIndexToLabelMapping()));
-                        marked = AutomataUtility.getUnion(marked, produceWordAutomaton(v, marked.getNumLabels()));
+                        marked = AutomataUtility.getUnion(marked, produceWordAutomaton(v, I.getNumLabels()));
                         LOGGER.debug(marked.prettyPrint("Marked after change", NoInvariantException.getIndexToLabelMapping()));
 
                     }
@@ -156,7 +156,7 @@ public class FiniteGames {
         }
         // TODO make I finite?
         //LOGGER.debug("Player 0 attractor computation starting");
-        Automata attractor_of_word = getAttractor_player0_toState(word.size(), produceWordAutomaton(word, word.size()));
+        Automata attractor_of_word = getAttractor_player0_toState(word.size(), produceWordAutomaton(word, I.getNumLabels()));
         return ((AutomataUtility.getIntersection(I,attractor_of_word)).findAcceptingString() !=null);
     }
 
