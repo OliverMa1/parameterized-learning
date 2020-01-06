@@ -1,5 +1,6 @@
 package learning;
 
+import common.DOTPrinter;
 import common.Timer;
 import common.finiteautomata.Automata;
 import common.finiteautomata.State;
@@ -66,12 +67,16 @@ public class LStarLearner extends Learner {
             int currentState = hypAut.getInitStateId();
             int j = 0;
             while (j <= ex.size()) {
+                System.out.println("LSTARLEARNER 69: start of while loop ex: "+ ex);
+                System.out.println("prefix beginning of loop" + prefix);
                 final Node sifted = classTree.sift(prefix);
+                System.out.println("Access Words: " + accessWords.get(currentState));
+                System.out.println("sifted Words: " + sifted.word);
 
                 if (!sifted.word.equals(accessWords.get(currentState))) {
                     // have found the point where the automaton goes wrong;
                     // add a new state
-
+                    System.out.println("Automaton goes wrong");
                     prefix.remove(prefix.size() - 1);
 
                     final Node[] distNode = new Node[1];
@@ -106,6 +111,8 @@ public class LStarLearner extends Learner {
 
                             a.addAll(oldDistPrefix);
                             b.addAll(oldDistPrefix);
+                            System.out.println("a: " + NoInvariantException.getLabeledWord(a) + " teacher is accepted: " + teacher.isAccepted(a) + "\n");
+                            System.out.println("b: " + NoInvariantException.getLabeledWord(b) + " teacher is accepted: " + teacher.isAccepted(b) + " \n");
 
                             if (teacher.isAccepted(a) != teacher.isAccepted(b)) {
                                 bestDistWord = oldDistPrefix;
@@ -124,6 +131,7 @@ public class LStarLearner extends Learner {
 
                     final List<Integer> a = new ArrayList<Integer>(nodeA.word);
                     a.addAll(bestDistWord);
+                    System.out.println("a: " + NoInvariantException.getLabeledWord(a) + " teacher is accepted: " + teacher.isAccepted(a));
                     if (teacher.isAccepted(a)) {
                         lastSifted.right = nodeA;
                         lastSifted.left = nodeB;
@@ -137,6 +145,7 @@ public class LStarLearner extends Learner {
                 //if (j >= cex.size()) break;
 
                 lastSifted = sifted;
+                System.out.println("LSTARLEARNER 142: before error: "+ ex + " and j is : " + j);
 
                 final int nextChar = ex.get(j++);
                 final State s = hypAut.getStates()[currentState];
@@ -144,13 +153,14 @@ public class LStarLearner extends Learner {
                 assert (nextStates.size() == 1);
 
                 currentState = nextStates.iterator().next();
-
                 prefix.add(nextChar);
+                System.out.println("Prefix : " + prefix + " next char: " + nextChar);
+
             }
 
             accessWords.clear();
             classTree.collectLeafWords(accessWords);
-
+            System.out.println(accessWords);
             hypAut = extractAutomaton(accessWords);
 
             /*
@@ -162,9 +172,14 @@ public class LStarLearner extends Learner {
             }
             lastHypAut = hypAut;
             */
+            System.out.println(hypAut.prettyPrint("candidate invariant:", NoInvariantException.getIndexToLabelMapping()));
+            System.out.println("CEX is positive: " + cex.isPositive() + " \n hypAut accepts: " + hypAut.accepts(ex) + " \n cex: " + cex.get());
+            System.out.println(NoInvariantException.getLabeledWord(ex));
+            System.out.println(NoInvariantException.getLabeledWord(cex.get()));
             if (!cex.isPositive() == hypAut.accepts(ex)) {
                 // the counterexample has not been eliminated yet, try again
             } else {
+                System.out.print("----------\n Check loop \n ----------");
                 cex.reset();
                 cont = !teacher.isCorrectLanguage(hypAut, cex);
             }
@@ -238,7 +253,7 @@ public class LStarLearner extends Learner {
                 w.addAll(this.word);
 
                 final boolean f = getTeacher().isAccepted(w);
-
+                System.out.println(" word : " + NoInvariantException.getLabeledWord(w) + " is accepted:? " + f);
                 while (w.size() > oldSize)
                     w.remove(w.size() - 1);
 

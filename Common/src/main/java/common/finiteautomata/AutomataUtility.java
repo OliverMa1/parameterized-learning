@@ -795,7 +795,9 @@ public class AutomataUtility {
         for (int l = 0; l < aut.getNumLabels(); ++l)
             for (int s = 0; s < wordLength; ++s)
                 lengthAut.addTrans(s, l, s + 1);
-
+        System.out.println(lengthAut + "\n " + aut);
+        System.out.println("aut.getNumLabels: " + aut.getNumLabels());
+        // TODO something wrong with aut.getNumLabels?
         return minimise(getIntersection(lengthAut, aut));
     }
 

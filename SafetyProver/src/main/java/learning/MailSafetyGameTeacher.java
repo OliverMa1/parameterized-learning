@@ -27,12 +27,7 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
     private boolean tryMinimalInvariant = true;
 
     public MailSafetyGameTeacher(int numLetters, Automata I, Automata B, Automata v_0, Automata v_1, EdgeWeightedDigraph T) {
-        super(numLetters,v_0,v_1, I, B, T);
-        LOGGER.debug(B.prettyPrint("\n--------------\nConstruct B", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
-        LOGGER.debug(I.prettyPrint("\n--------------\nConstruct I", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
-        LOGGER.debug(v_0.prettyPrint("\n--------------\nConstruct P0", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
-        LOGGER.debug(v_1.prettyPrint("\n--------------\nConstruct P1", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
-
+        super(numLetters,I,B,v_0,v_1,T);
         finiteStates = new FiniteGames(v_0,v_1, I, T, B);
     }
 
@@ -48,14 +43,17 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
 
     public boolean isAccepted(List<Integer> word)
             throws Timer.TimeoutException {
-        System.out.println("MailsafetyGameTeacher: isAccepted() called with word " + word);
-        Timer.tick();
-        System.out.println("MailsafetyGameTeacher: checking reachable states of word" + word);
-        boolean isReachable = finiteStates.isReachable(word);
-        System.out.println("MailsafetyGameTeacher: checking if word" + word + " can reach bad states");
-        boolean isBad = finiteStates.isBadReachable(word);
 
-        System.out.println("MailSafetyGameTeacher: is debug enabled?: " + LOGGER.isDebugEnabled());
+      //  System.out.println("MailsafetyGameTeacher: isAccepted() called with word " + word);
+        Timer.tick();
+       // System.out.println("MailsafetyGameTeacher: checking reachable states of word" + word);
+        boolean isReachable = finiteStates.isReachable(word);
+        System.out.println(" Is " + NoInvariantException.getLabeledWord(word) + " reachable? " + isReachable);
+      //  System.out.println("MailsafetyGameTeacher: checking if word" + word + " can reach bad states");
+        boolean isBad = finiteStates.isBadReachable(word);
+        System.out.println("Is "+ NoInvariantException.getLabeledWord(word) + " bad? " + isBad);
+
+        //System.out.println("MailSafetyGameTeacher: is debug enabled?: " + LOGGER.isDebugEnabled());
         String labeledWord = LOGGER.isDebugEnabled() ?
                 NoInvariantException.getLabeledWord(word) : null;
 
@@ -72,6 +70,9 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
 
     public boolean isCorrectLanguage(Automata hyp, CounterExample cex)
             throws Timer.TimeoutException {
+        LOGGER.debug("found hypothesis, size " + hyp.getStates().length);
+        LOGGER.debug(hyp.prettyPrint("candidate invariant:", NoInvariantException.getIndexToLabelMapping()));
+        LOGGER.debug(DOTPrinter.getString(hyp, NoInvariantException.getIndexToLabelMapping()));
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("found hypothesis, size " + hyp.getStates().length);
             LOGGER.debug(hyp.prettyPrint("candidate invariant:", NoInvariantException.getIndexToLabelMapping()));
@@ -82,6 +83,8 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
 
         // first test: are initial states contained?
         ex = initialCheck(hyp,getInitialStates());
+        LOGGER.debug(getInitialStates().prettyPrint("\n--------------\nConstruct Initial states", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+
         Timer.tick();
         if (ex != null) {
             if (LOGGER.isDebugEnabled()) {
@@ -98,6 +101,7 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
                 throw new NoInvariantException(ex, getInitialStates(), getTransition());
             }
             cex.addPositive(ex);
+            System.out.println(" Add positive cex: " + NoInvariantException.getLabeledWord(ex));
             return false;
         }
 

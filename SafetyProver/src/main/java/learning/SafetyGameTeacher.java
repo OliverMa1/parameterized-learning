@@ -4,7 +4,9 @@ import common.bellmanford.EdgeWeightedDigraph;
 import common.finiteautomata.Automata;
 
 public abstract class SafetyGameTeacher extends Teacher {
-    private final Automata I,v_0,v_1;
+    private final Automata I;
+    private final Automata v_0;
+    private final Automata v_1;
     private final Automata B;
     private final EdgeWeightedDigraph T;
 
