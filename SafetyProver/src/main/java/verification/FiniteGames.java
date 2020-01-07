@@ -83,6 +83,7 @@ public class FiniteGames {
         return marked;
     }
 
+    // TODO change player from 0 to 1... or copy another method...
     public Automata getAttractor_player0_toState(int wordLen, Automata reach) {
         Automata marked;
        // LOGGER.debug("computing automaton describing reachable configurations of length " + wordLen);

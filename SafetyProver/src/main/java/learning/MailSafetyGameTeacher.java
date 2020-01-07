@@ -47,6 +47,8 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
       //  System.out.println("MailsafetyGameTeacher: isAccepted() called with word " + word);
         Timer.tick();
        // System.out.println("MailsafetyGameTeacher: checking reachable states of word" + word);
+        // TODO implement normal reachability method (should be around somewhere...)
+        // TODO if is Reachable and P1 bad reachable check P1 reachable to determine if it is spurious or real CE
         boolean isReachable = finiteStates.isReachable(word);
         System.out.println(" Is " + NoInvariantException.getLabeledWord(word) + " reachable? " + isReachable);
       //  System.out.println("MailsafetyGameTeacher: checking if word" + word + " can reach bad states");
