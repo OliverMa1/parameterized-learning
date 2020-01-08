@@ -93,7 +93,7 @@ public class FiniteStateSets {
             }
 
             List<Integer> cex = AutomataUtility.findSomeWord(AutomataUtility.getIntersection(reachable, B));
-            if (cex != null) throw new NoInvariantException(cex, I, T);
+            //if (cex != null) throw new NoInvariantException(cex, I, T);
 
             reachableStateAutomata.put(wordLen, reachable);
         }

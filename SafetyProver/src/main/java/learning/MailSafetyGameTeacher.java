@@ -24,11 +24,13 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
 
     public static final Logger LOGGER = LogManager.getLogger();
     protected FiniteGames finiteStates;
+    private FiniteStateSets finiteStateSets;
     private boolean tryMinimalInvariant = true;
 
     public MailSafetyGameTeacher(int numLetters, Automata I, Automata B, Automata v_0, Automata v_1, EdgeWeightedDigraph T) {
         super(numLetters,I,B,v_0,v_1,T);
         finiteStates = new FiniteGames(v_0,v_1, I, T, B);
+
     }
 
     private void debug(Supplier<String> msg) {
@@ -47,27 +49,35 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
       //  System.out.println("MailsafetyGameTeacher: isAccepted() called with word " + word);
         Timer.tick();
        // System.out.println("MailsafetyGameTeacher: checking reachable states of word" + word);
-        // TODO implement normal reachability method (should be around somewhere...)
-        // TODO if is Reachable and P1 bad reachable check P1 reachable to determine if it is spurious or real CE
+        LOGGER.debug("Check if word" + NoInvariantException.getLabeledWord(word) + " is reachable:");
         boolean isReachable = finiteStates.isReachable(word);
-        System.out.println(" Is " + NoInvariantException.getLabeledWord(word) + " reachable? " + isReachable);
-      //  System.out.println("MailsafetyGameTeacher: checking if word" + word + " can reach bad states");
-        boolean isBad = finiteStates.isBadReachable(word);
-        System.out.println("Is "+ NoInvariantException.getLabeledWord(word) + " bad? " + isBad);
+        LOGGER.debug("Word is reachable?: " + isReachable);
+        // TODO exclude or include if it is not reachable?
+        if (isReachable){
+            boolean isBad = finiteStates.isBadReachable(word);
+            LOGGER.debug("Is "+ NoInvariantException.getLabeledWord(word) + " bad? " + isBad);
+            String labeledWord = LOGGER.isDebugEnabled() ?
+                    NoInvariantException.getLabeledWord(word) : null;
 
-        //System.out.println("MailSafetyGameTeacher: is debug enabled?: " + LOGGER.isDebugEnabled());
-        String labeledWord = LOGGER.isDebugEnabled() ?
-                NoInvariantException.getLabeledWord(word) : null;
-
-        if (isReachable && isBad) {
-            LOGGER.debug("membership query: " + labeledWord);
-            throw new NoInvariantException(word, getInitialStates(), getTransition());
+            if (isBad) {
+                boolean isP1reachable = finiteStates.isReachableP1(word);
+                if(isP1reachable) {
+                    LOGGER.debug("membership query P1: " + labeledWord + " is P1 reachable and bad");
+                    throw new NoInvariantException(word, getInitialStates(), getTransition());
+                }
+                else {
+                    LOGGER.debug(labeledWord + " is reachable from P0 but not P1 and P1 can reach a bad state -> do not include in target language");
+                    return false;
+                }
+            }
+            else{
+                LOGGER.debug(" P1 cannot reach a bad state from the word " + labeledWord + " and it is reachable by either P0 or P1");
+                return true;
+            }
         }
-
-        boolean accepted = tryMinimalInvariant ? isReachable : !isBad;
-        LOGGER.debug("membership query: " + labeledWord + " -> " + (accepted ? "accepted" : "rejected"));
-        Timer.tick();
-        return accepted;
+        else{
+            return false;
+        }
     }
 
     public boolean isCorrectLanguage(Automata hyp, CounterExample cex)

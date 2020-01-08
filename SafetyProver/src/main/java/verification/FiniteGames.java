@@ -19,6 +19,7 @@ public class FiniteGames {
             new HashMap<Integer, Set<List<Integer>>>();
     private final Map<Integer, Automata> reachableStateAutomata =
             new HashMap<Integer, Automata>();
+    private FiniteStateSets finiteStateSets;
 
 
     public FiniteGames(Automata v_0, Automata v_1, Automata I, EdgeWeightedDigraph T, Automata B) {
@@ -27,9 +28,10 @@ public class FiniteGames {
         this.T = T;
         this.B = B;
         this.I = I;
+        finiteStateSets = new FiniteStateSets(I,T,B);
 
     }
-
+    // TODO does not work properly, computes only 1 step and terminates? check amount of steps. check the computed predecessors of Bad
     public Automata getAttractor_player1_toBad(int wordLen) {
         Automata marked = reachableStateAutomata.get(wordLen);
         if (marked == null) {
@@ -47,7 +49,7 @@ public class FiniteGames {
             int i = 0;
             while(!Automata_equality(marked,marked_prev)){
                 i = i+1;
-                if (i > 20){
+                if (i > 50){
                     break;
                 }
                 marked_prev = marked;
@@ -84,11 +86,11 @@ public class FiniteGames {
     }
 
     // TODO change player from 0 to 1... or copy another method...
-    public Automata getAttractor_player0_toState(int wordLen, Automata reach) {
+    public Automata getAttractor_player1_toState(int wordLen, Automata reach) {
         Automata marked;
        // LOGGER.debug("computing automaton describing reachable configurations of length " + wordLen);
 
-        Map<List<Integer>,Integer> v1_markings = new HashMap<>();
+        Map<List<Integer>,Integer> v0_markings = new HashMap<>();
         // TODO make reach complete automaton... and probably Bad as well above
         //reach = AutomataUtility.toCompleteDFA(reach);
         //TODO might need a copy method, this just copies the reference...
@@ -105,7 +107,7 @@ public class FiniteGames {
         int i = 0;
         while(!Automata_equality(marked,marked_prev)){
             i = i+1;
-            if (i > 20){
+            if (i > 50){
                 break;
             }
 
@@ -115,16 +117,16 @@ public class FiniteGames {
             Automata predecessors = VerificationUtility.getPreImage(T,marked);
             Automata predecessors_v1 = AutomataUtility.getIntersection(predecessors, v_1);
             Automata predecessors_v0 = AutomataUtility.getIntersection(predecessors,v_0);
-            List<List<Integer>> v1_predecessor_vertices = AutomataUtility.getWords(predecessors_v1, wordLen);
+            List<List<Integer>> v0_predecessor_vertices = AutomataUtility.getWords(predecessors_v0, wordLen);
             LOGGER.debug(predecessors.prettyPrint("Predecessors", NoInvariantException.getIndexToLabelMapping()));
 
-            System.out.println("Size of v1 predecessors: " +v1_predecessor_vertices.size());
-            for(List<Integer> v : v1_predecessor_vertices){
+            System.out.println("Size of v0 predecessors: " +v0_predecessor_vertices.size());
+            for(List<Integer> v : v0_predecessor_vertices){
                 LOGGER.debug( "predecessor: " + NoInvariantException.getLabeledWord(v));
-                if(v1_markings.containsKey(v)){
-                    int n = v1_markings.get(v);
+                if(v0_markings.containsKey(v)){
+                    int n = v0_markings.get(v);
                     if (n-1 == 0){
-                        v1_markings.remove(v);
+                        v0_markings.remove(v);
                         LOGGER.debug(marked.prettyPrint("Marked before change", NoInvariantException.getIndexToLabelMapping()));
                         Automata test = produceWordAutomaton(v, I.getNumLabels());
                         LOGGER.debug(test.prettyPrint("Test before change", NoInvariantException.getIndexToLabelMapping()));
@@ -133,32 +135,35 @@ public class FiniteGames {
 
                     }
                     else{
-                        v1_markings.put(v,n-1);
+                        v0_markings.put(v,n-1);
                     }
                 }
                 else{
                     Automata image_v = VerificationUtility.getImage(v,T,marked.getNumLabels());
                     int n = AutomataUtility.getWords(image_v,wordLen).size();
-                    v1_markings.put(v,n);
+                    v0_markings.put(v,n);
                 }
             }
-            marked = AutomataUtility.getUnion(marked, predecessors_v0);
-            LOGGER.debug(marked.prettyPrint("Before = check marked states for p0 reachability", NoInvariantException.getIndexToLabelMapping()));
+            marked = AutomataUtility.getUnion(marked, predecessors_v1);
+            LOGGER.debug(marked.prettyPrint("Before = check marked states for p1 reachability", NoInvariantException.getIndexToLabelMapping()));
         }
-        LOGGER.debug(marked.prettyPrint("Returned marked states for p0 reachability", NoInvariantException.getIndexToLabelMapping()));
+        LOGGER.debug(marked.prettyPrint("Returned marked states for p1 reachability", NoInvariantException.getIndexToLabelMapping()));
 
         return marked;
     }
 
-    public boolean isReachable(List<Integer> word)
+    public boolean isReachableP1(List<Integer> word)
             throws Timer.TimeoutException {
         if (I.accepts(word)){
             return true;
         }
         // TODO make I finite?
         //LOGGER.debug("Player 0 attractor computation starting");
-        Automata attractor_of_word = getAttractor_player0_toState(word.size(), produceWordAutomaton(word, I.getNumLabels()));
+        Automata attractor_of_word = getAttractor_player1_toState(word.size(), produceWordAutomaton(word, I.getNumLabels()));
         return ((AutomataUtility.getIntersection(I,attractor_of_word)).findAcceptingString() !=null);
+    }
+    public boolean isReachable(List<Integer> word) throws Timer.TimeoutException{
+        return finiteStateSets.isReachable(word);
     }
 
     public boolean isBadReachable(List<Integer> word){
