@@ -45,10 +45,7 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
 
     public boolean isAccepted(List<Integer> word)
             throws Timer.TimeoutException {
-
-      //  System.out.println("MailsafetyGameTeacher: isAccepted() called with word " + word);
         Timer.tick();
-       // System.out.println("MailsafetyGameTeacher: checking reachable states of word" + word);
         LOGGER.debug("Check if word" + NoInvariantException.getLabeledWord(word) + " is reachable:");
         boolean isReachable = finiteStates.isReachable(word);
         LOGGER.debug("Word is reachable?: " + isReachable);
@@ -113,7 +110,7 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
                 throw new NoInvariantException(ex, getInitialStates(), getTransition());
             }
             cex.addPositive(ex);
-            System.out.println(" Add positive cex: " + NoInvariantException.getLabeledWord(ex));
+            LOGGER.debug(" Add positive cex: " + NoInvariantException.getLabeledWord(ex));
             return false;
         }
 

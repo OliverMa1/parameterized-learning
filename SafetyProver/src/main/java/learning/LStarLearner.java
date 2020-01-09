@@ -254,7 +254,6 @@ public class LStarLearner extends Learner {
                 w.addAll(this.word);
 
                 final boolean f = getTeacher().isAccepted(w);
-                System.out.println(" word : " + NoInvariantException.getLabeledWord(w) + " is accepted:? " + f);
                 while (w.size() > oldSize)
                     w.remove(w.size() - 1);
 
