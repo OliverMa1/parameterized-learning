@@ -3,6 +3,7 @@ package learning;
 import common.DOTPrinter;
 import common.Timer;
 import common.finiteautomata.Automata;
+import common.finiteautomata.AutomataUtility;
 import common.finiteautomata.State;
 
 import java.util.*;
@@ -185,7 +186,7 @@ public class LStarLearner extends Learner {
             }
         }
         solution = hypAut;
-        return solution;
+        return AutomataUtility.minimiseAcyclic(solution);
     }
 
     ////////////////////////////////////////////////////////////////////////////
