@@ -140,40 +140,33 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
         }
 
         // player 0 test: is the invariant inductive?
-        List<Automata> player0_successors = new LinkedList<>();
-        Tuple2<List<Integer>, List<List<Integer>>> xy = player0_closedness(hyp, player0_successors);
+        Tuple2<List<Integer>, List<List<Integer>>> xy = player0_closedness(hyp);
         Timer.tick();
         if (xy != null) {
             List<Integer> x = xy.x;
-            boolean x_isReachable = finiteStates.isReachable(x);
+            String x2 = NoInvariantException.getLabeledWord(x);
+            if (!finiteStates.isReachable(x)) {
+                LOGGER.debug("* Configuration " + x2 + " should be excluded from the hypothesis.");
+                addNegativeCEX(cex, x);
+                return false;
+            }
+            LOGGER.debug("Hypothesis is not inductive: ");
             for (List<Integer> y : xy.y) {
-                String x2 = null, y2 = null;
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Hypothesis is not inductive: ");
-                    x2 = NoInvariantException.getLabeledWord(x);
-                    y2 = NoInvariantException.getLabeledWord(y);
-                    LOGGER.debug(x2 + " => " + y2);
-                }
-                if (!x_isReachable) {
-                    LOGGER.debug("* Configuration " + x2 + " should be excluded from the hypothesis.");
-                    addNegativeCEX(cex, x);
+                String y2 = NoInvariantException.getLabeledWord(y);
+                LOGGER.debug(x2 + " => " + y2);
+                boolean addPositive = !finiteStates.isBadReachable(y);
+                if (addPositive) {
+                    LOGGER.debug("* Configuration " + y2 + " should be included in the hypothesis.");
+                    addPositiveCEX(cex, y);
                 } else {
-                    List<List<Integer>> all_successors = AutomataUtility.getWords(player0_successors.get(0), x.size());
-                    for (List<Integer> word : all_successors) {
-                        boolean addNegative = finiteStates.isBadReachable(word);
-                        if (!addNegative) {
-                            LOGGER.debug("* Configuration " + y2 + " should be included in the hypothesis.");
-                            addPositiveCEX(cex, y);
-                        } else {
-                            LOGGER.debug("* Need to look for other successors");
-                        }
-                    }
-                    LOGGER.debug("* Configuration " + x2 + " should be excluded in the hypothesis.");
-                    addNegativeCEX(cex, x);
+                    LOGGER.debug("* Need to look for other successors");
                 }
             }
-            if (!cache.isEmpty())
-                return false;
+            if (!cex.exists()) {
+                LOGGER.debug("* Configuration " + x2 + " should be excluded from the hypothesis.");
+                addNegativeCEX(cex, x);
+            }
+            return false;
         }
 
         // player 1 test: is the invariant inductive? TODO: return more than one cex?
@@ -181,31 +174,27 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
         Timer.tick();
         if (xy != null) {
             List<Integer> x = xy.x;
-            boolean x_isReachable = finiteStates.isReachable(x);
+            String x2 = NoInvariantException.getLabeledWord(x);
+            if (!finiteStates.isReachable(x)) {
+                LOGGER.debug("* Configuration " + x2 + " should be excluded from the hypothesis.");
+                addNegativeCEX(cex, x);
+                return false;
+            }
+            LOGGER.debug("Hypothesis is not inductive: ");
             for (List<Integer> y : xy.y) {
-                String x2 = null, y2 = null;
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Hypothesis is not inductive: ");
-                    x2 = NoInvariantException.getLabeledWord(x);
-                    y2 = NoInvariantException.getLabeledWord(y);
-                    LOGGER.debug(x2 + " => " + y2);
-                }
-                if (!x_isReachable) {
+                String y2 = NoInvariantException.getLabeledWord(y);
+                LOGGER.debug(x2 + " => " + y2);
+                boolean addPositive = !finiteStates.isBadReachable(y);
+                if (addPositive) {
+                    LOGGER.debug("* Configuration " + y2 + " should be included in the hypothesis.");
+                    addPositiveCEX(cex, y);
+                } else {
                     LOGGER.debug("* Configuration " + x2 + " should be excluded from the hypothesis.");
                     addNegativeCEX(cex, x);
-                } else {
-                    boolean addPositive = finiteStates.isBadReachable(y);
-                    if (!addPositive) {
-                        LOGGER.debug("* Configuration " + y2 + " should be included in the hypothesis.");
-                        addPositiveCEX(cex, y);
-                    } else {
-                        LOGGER.debug("* Configuration " + x2 + " should be excluded from the hypothesis.");
-                        addNegativeCEX(cex, x);
-                    }
+                    return false;
                 }
             }
-            if (!cache.isEmpty())
-                return false;
+            return false;
         }
 
         // the candidate automaton is a proof
@@ -263,7 +252,7 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
      * and y is one of it's successors.
      */
 
-    private Tuple2<List<Integer>, List<List<Integer>>> player0_closedness(Automata hypothesis, List<Automata> player0_successors){
+    private Tuple2<List<Integer>, List<List<Integer>>> player0_closedness(Automata hypothesis){
         // b_1 contains all vertices that have a successor in hypothesis
         Automata b_1 = VerificationUtility.getPreImage(getTransition(), hypothesis);
         // b_2 contains all vertices of player 0 that have no successor in hypothesis
@@ -275,7 +264,6 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
             return null;
         }
         Automata successors_of_u = VerificationUtility.getImage(u, getTransition(), getNumLetters());
-        player0_successors.add(successors_of_u);
         List<List<Integer>> cexs = AutomataUtility.getWords(successors_of_u, u.size());
         return new Tuple2<>(u, cexs);
     }
