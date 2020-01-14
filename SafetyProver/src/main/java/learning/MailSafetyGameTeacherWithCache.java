@@ -144,9 +144,9 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
         Tuple2<List<Integer>, List<List<Integer>>> xy = player0_closedness(hyp, player0_successors);
         Timer.tick();
         if (xy != null) {
-            boolean x_isReachable = finiteStates.isReachable(xy.x);
+            List<Integer> x = xy.x;
+            boolean x_isReachable = finiteStates.isReachable(x);
             for (List<Integer> y : xy.y) {
-                List<Integer> x = xy.x;
                 String x2 = null, y2 = null;
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("Hypothesis is not inductive: ");
@@ -180,9 +180,9 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
         xy = player1_closedness(hyp);
         Timer.tick();
         if (xy != null) {
-            boolean x_isReachable = finiteStates.isReachable(xy.x);
+            List<Integer> x = xy.x;
+            boolean x_isReachable = finiteStates.isReachable(x);
             for (List<Integer> y : xy.y) {
-                List<Integer> x = xy.x;
                 String x2 = null, y2 = null;
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("Hypothesis is not inductive: ");
