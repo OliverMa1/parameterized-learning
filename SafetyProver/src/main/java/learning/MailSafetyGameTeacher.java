@@ -30,6 +30,10 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
     public MailSafetyGameTeacher(int numLetters, Automata I, Automata B, Automata v_0, Automata v_1, EdgeWeightedDigraph T) {
         super(numLetters,I,B,v_0,v_1,T);
         finiteStates = new FiniteGames(v_0,v_1, I, T, B);
+        LOGGER.debug(v_0.prettyPrint("V_0", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+        LOGGER.debug(v_1.prettyPrint("V_1", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+        LOGGER.debug(I.prettyPrint("I", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+        LOGGER.debug(B.prettyPrint("B", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
 
     }
 
@@ -98,14 +102,14 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
         if (ex != null) {
             if (LOGGER.isDebugEnabled()) {
                 String word = NoInvariantException.getLabeledWord(ex);
-                LOGGER.debug("Line 89: An initial configuration is not contained in hypothesis: " + word);
+                LOGGER.debug("Line 101: An initial configuration is not contained in hypothesis: " + word);
             }
             boolean reachBad = finiteStates.isBadReachable(ex);
 
             if (reachBad) {
                 String word = NoInvariantException.getLabeledWord(ex);
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Line 95: Initial state is contained in bad: " + word + " ");
+                    LOGGER.debug("Line 108: Initial state can reach bad: " + word + " ");
                 }
                 throw new NoInvariantException(ex, getInitialStates(), getTransition());
             }
@@ -191,6 +195,7 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
 
             return false;
         }
+
         return true;
     }
 
@@ -226,12 +231,52 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
      */
 
     private Tuple<List<Integer>> player0_closedness(Automata hypothesis, List<Automata> player0_successors){
+        hypothesis = AutomataUtility.minimiseAcyclic(hypothesis);
+        LOGGER.debug(hypothesis.prettyPrint("\n--------------\nHypothesis P0 closed check:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+
         // b_1 contains all vertices that have a successor in hypothesis
-        Automata b_1 = VerificationUtility.getPreImage(getTransition(), hypothesis);
+        Automata b_1 = AutomataUtility.minimiseAcyclic(VerificationUtility.getPreImage(getTransition(), hypothesis));
+        LOGGER.debug(b_1.prettyPrint("\n--------------\nb_1:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+
         // b_2 contains all vertices of player 0 that have no successor in hypothesis
-        Automata b_2 = AutomataUtility.getDifference(getPlayer0_vertices(), hypothesis);
+        Automata b_2 = AutomataUtility.minimiseAcyclic(AutomataUtility.getDifference(getPlayer0_vertices(), b_1));
+        LOGGER.debug(b_2.prettyPrint("\n--------------\nb_2:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+
         // b_3 contains contains all vertices of player 0 belonging to the hypothesis that have no successor in hypothesis
         Automata b_3 = AutomataUtility.getIntersection(b_2,hypothesis);
+        LOGGER.debug(b_3.prettyPrint("\n--------------\nb_3:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+        List<List<Integer>> a = AutomataUtility.getWords(b_1,4);
+        LOGGER.debug("\n------------\n)Check b_1: \n------------\n)");
+        for (List <Integer> b : a){
+            LOGGER.debug("Debug in Main 330, accepted words of invariant: " + NoInvariantException.getLabeledWord(b));
+            Automata v_0 = finiteStates.produceWordAutomaton(b,getNumLetters());
+            Automata image_v = VerificationUtility.getImage(v_0,getTransition());
+            for (List<Integer> words : AutomataUtility.getWords(image_v,3)){
+                LOGGER.debug(" Successors of : " + NoInvariantException.getLabeledWord(b) + " : " + NoInvariantException.getLabeledWord(words) + "is in hypo?: " + hypothesis.accepts(words));
+            }
+        }
+
+        a = AutomataUtility.getWords(b_2,4);
+        LOGGER.debug("\n------------\n)Check b_2: \n------------\n)");
+        for (List <Integer> b : a){
+            LOGGER.debug("Debug in Main 330, accepted words of invariant: " + NoInvariantException.getLabeledWord(b));
+            Automata v_0 = finiteStates.produceWordAutomaton(b,getNumLetters());
+            Automata image_v = VerificationUtility.getImage(v_0,getTransition());
+            for (List<Integer> words : AutomataUtility.getWords(image_v,3)){
+                LOGGER.debug(" Successors of : " + NoInvariantException.getLabeledWord(b) + " : " + NoInvariantException.getLabeledWord(words) + "is in hypo?: " + hypothesis.accepts(words));
+            }
+        }
+        a = AutomataUtility.getWords(hypothesis,4);
+        LOGGER.debug("\n------------\n)Check hyp: \n------------\n)");
+        for (List <Integer> b : a){
+            LOGGER.debug("Debug in Main 330, accepted words of invariant: " + NoInvariantException.getLabeledWord(b) + " " + b);
+            Automata v_0 = finiteStates.produceWordAutomaton(b,getNumLetters());
+            Automata image_v = AutomataUtility.minimiseAcyclic(VerificationUtility.getImage(v_0,getTransition()));
+            LOGGER.debug(image_v.prettyPrint("\n--------------\nImage_v of :" + NoInvariantException.getLabeledWord(b) , NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+            for (List<Integer> words : AutomataUtility.getWords(image_v,4)){
+                LOGGER.debug(" Successors of : " + NoInvariantException.getLabeledWord(b) + " : " + NoInvariantException.getLabeledWord(words) + "is in hypo?: " + hypothesis.accepts(words));
+            }
+        }
         List<Integer> u = b_3.findAcceptingString();
         if (u == null){
             return null;

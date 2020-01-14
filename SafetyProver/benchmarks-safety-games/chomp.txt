@@ -15,21 +15,33 @@ Transition {
     init: si;
     // P1 transitions
     si -> ss E/S;
+    si -> sl E/E;
     // P0 transitions
     si -> ss S/E;
+    si -> sl S/S;
+    // Winning/Losing turn
+    sl -> s0 0/0; 
+    sl -> s0 1/0;
+    sl -> s0 2/0;
+    sl -> s0 3/0;
+    sl -> s0 4/0;    
     // go to self loop state if 0 is read first
-    ss -> s0 0/0; 
     s0 -> s0 0/0;
+    s0 -> s0 1/0;
+    s0 -> s0 2/0;
+    s0 -> s0 3/0;
+    s0 -> s0 4/0; 
 
     // read 1's and eventually chomp 1 to a 0 and all following 1's
-    ss -> s1;
+    ss -> s1 1/1;
     s1 -> s1 1/1;
     s1 -> s11 1/0;
     s11 -> s11 1/0;
     s11 -> s0 0/0;
 
     // first 2 can be read and changed into 1 or 0
-    ss -> s2;
+    ss -> s2 2/2;
+    ss -> s21 2/1;
     s2 -> s2 2/2;
     s2 -> s1;
     // change 2 into 1
@@ -45,11 +57,12 @@ Transition {
     s20 -> s0 0/0;
 
     // first 3 can be read and changed into 2, 1 or 0
-    ss -> s3;
+    ss -> s3 3/3;
     s3 -> s3 3/3;
     s3 -> s2;
     s3 -> s1;
     // change 3 into 2
+    ss -> s32 3/2;
     s3 -> s32 3/2;
     s32 -> s32 3/2;
     s32 -> s0 0/0;
@@ -57,6 +70,7 @@ Transition {
     s322 -> s322 2/2;
     s322 -> s211;
     // change 3 into 1
+    ss -> s31 3/1;
     s3 -> s31 3/1;
     s31 -> s31 3/1;
     s31 -> s211;
@@ -71,13 +85,14 @@ Transition {
     s30 -> s0 0/0;
     
     // first 4 can be read and changed into 3, 2, 1 or 0
-    ss -> s4;
+    ss -> s4 4/4;
     s4 -> s4 4/4;
     s4 -> s3;
     s3 -> s2;
     s3 -> s1;
     
     // change 4 into 3
+    ss -> s43 4/3;
     s4 -> s43 4/3;
     s43 -> s43 4/3;
     s43 -> s0 0/0;
@@ -86,6 +101,7 @@ Transition {
     s433 -> s322;
 
     // change 4 into 2
+    ss -> s42 4/2;
     s4 -> s42 4/2;
     s42 -> s42 4/2;
     s42 -> s322;
@@ -94,6 +110,7 @@ Transition {
     s432 -> s322;
 
     // change 4 into 1
+    ss -> s41 4/1;
     s4 -> s41 4/1;
     s41 -> s41 4/1;
     s41 -> s211;
@@ -115,9 +132,9 @@ Bad {
     init: s0;
 
     s0 -> s1 S;
-    s1 -> s1 1;
-    s1 -> s1 0;
-    accepting: s1;
+    s1 -> s2 0;
+    s2 -> s2 0;
+    accepting: s2;
 }
 
 P0 {

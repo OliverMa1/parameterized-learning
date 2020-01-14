@@ -46,9 +46,9 @@ public class FiniteGames {
             Map<List<Integer>,Integer> v0_markings = new HashMap<>();
             //TODO might need a copy method, this just copies the reference...
             marked = AutomataUtility.getWordAutomaton(B, wordLen);
-            //LOGGER.debug(B.prettyPrint("\n--------------\nPlayer 1 Attractor which can reach Bad:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+            LOGGER.debug(B.prettyPrint("\n--------------\nPlayer 1 Attractor which can reach Bad:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
 
-           // LOGGER.debug(marked.prettyPrint("\n--------------\n Initially marked words:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+            LOGGER.debug(marked.prettyPrint("\n--------------\n Initially marked words:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
             Automata marked_prev = null;
             // TODO equals method for automata might be required... or just intersection and emptiness check? or save set of
             // TODO marked vertices and compare sets, test Automata_equality if problems happen here
@@ -65,7 +65,9 @@ public class FiniteGames {
 
                 Automata predecessors = VerificationUtility.getPreImage(T,marked);
                 Automata predecessors_v0 = AutomataUtility.getIntersection(predecessors, v_0);
-                Automata predecessors_v1 = AutomataUtility.getIntersection(predecessors,v_1);
+                Automata predecessors_v1 = AutomataUtility.minimiseAcyclic(AutomataUtility.getIntersection(predecessors,v_1));
+                LOGGER.debug(predecessors_v1.prettyPrint("\n--------------\nP1 predecessors:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+
                 List<List<Integer>> v0_predecessor_vertices = AutomataUtility.getWords(predecessors_v0, wordLen);
                 //LOGGER.debug(predecessors.prettyPrint("Predecessors", NoInvariantException.getIndexToLabelMapping()));
                 /*
@@ -76,8 +78,8 @@ public class FiniteGames {
                         Automata image_v = VerificationUtility.getImage(v,T,marked.getNumLabels());
                         int n = AutomataUtility.getWords(image_v,wordLen).size();
                         for (List<Integer> words : AutomataUtility.getWords(image_v,wordLen)){
-                            if (k < 4) {
-                                LOGGER.debug(" get words: " + NoInvariantException.getLabeledWord(words));
+                            if (k < 140) {
+                                LOGGER.debug(" Successors of : " + NoInvariantException.getLabeledWord(v) + " : " + NoInvariantException.getLabeledWord(words) + " is word accepted in v_1" + v_1.accepts(words));
                                 k = k +1;
                             }
                         }
@@ -91,6 +93,9 @@ public class FiniteGames {
                     boolean add_v0 = check_p0_marking(marked, v0_vertex, n, wordLen);
                     if (add_v0){
                         v0_markings.put(v0_vertex,0);
+                        LOGGER.debug( "predecessor added to marked: " + NoInvariantException.getLabeledWord(v0_vertex) + "marking: " + n);
+                        Automata successors = AutomataUtility.minimiseAcyclic(VerificationUtility.getImage(produceWordAutomaton(v0_vertex,I.getNumLabels()),T));
+                        LOGGER.debug(successors.prettyPrint("\n--------------\nSuccesors of the worda above:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
                         marked = AutomataUtility.getUnion(marked, produceWordAutomaton(v0_vertex, marked.getNumLabels()));
                     }
                 }
@@ -185,12 +190,16 @@ public class FiniteGames {
     public boolean isBadReachable(List<Integer> word){
         String ex = NoInvariantException.getLabeledWord(word);
         //LOGGER.debug("\nPlayer 1 attractor computation starting for: " + ex);
-        boolean result =  getAttractor_player1_toBad(word.size()).accepts(word);
+        Automata res = getAttractor_player1_toBad(word.size());
+        boolean result =  res.accepts(word);
        // LOGGER.debug(" is bad reachable? : " + result);
+        if (result == true){
+
+        }
         return result;
     }
     // TODO produceWord Automaton creates wrong automaton... missing letters!
-    private Automata produceWordAutomaton(List<Integer> word, int numLetters){
+    public Automata produceWordAutomaton(List<Integer> word, int numLetters){
         Automata result = new Automata(0,word.size()+1,numLetters);
         for(int i = 0; i< word.size(); i++) {
             result.addTrans(i, word.get(i), i + 1);

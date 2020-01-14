@@ -254,9 +254,9 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
 
     private Tuple2<List<Integer>, List<List<Integer>>> player0_closedness(Automata hypothesis){
         // b_1 contains all vertices that have a successor in hypothesis
-        Automata b_1 = VerificationUtility.getPreImage(getTransition(), hypothesis);
+        Automata b_1 = AutomataUtility.toDFA(VerificationUtility.getPreImage(getTransition(), hypothesis));
         // b_2 contains all vertices of player 0 that have no successor in hypothesis
-        Automata b_2 = AutomataUtility.getDifference(getPlayer0_vertices(), hypothesis);
+        Automata b_2 = AutomataUtility.getDifference(getPlayer0_vertices(),b_1);
         // b_3 contains contains all vertices of player 0 belonging to the hypothesis that have no successor in hypothesis
         Automata b_3 = AutomataUtility.getIntersection(b_2,hypothesis);
         List<Integer> u = b_3.findAcceptingString();
