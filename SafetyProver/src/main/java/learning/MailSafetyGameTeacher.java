@@ -140,6 +140,7 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Hypothesis is not inductive: ");
                 x = NoInvariantException.getLabeledWord(xy.x);
+                LOGGER.debug(x );
                 y = NoInvariantException.getLabeledWord(xy.y);
                 LOGGER.debug(x + " => " + y);
             }

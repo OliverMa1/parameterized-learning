@@ -296,8 +296,7 @@ public class Main {
                     break;
                 case LIBALF:
                     learner = new LibALFLearner(libalfFlag);
-                    teacher = new BasicRMCTeacher(model.getNumberOfLetters(),
-                            model.getI(), model.getB(), model.getT());
+                    teacher = new MailSafetyGameTeacherWithCache(model.getNumberOfLetters(), model.getI(), model.getB(), model.getP0(), model.getP1(), model.getT());
                     classroom = new MonolithicLearning(learner, teacher);
                     invariant = classroom.infer();
                     break;
