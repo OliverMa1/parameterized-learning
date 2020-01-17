@@ -135,10 +135,6 @@ P0 {
     init: si;
     si -> ss S;
 
-    // Losing turn
-    ss -> p1 1;
-    p1 -> p1 1;
-
     // 5 has occurred
     ss -> p5 5;
     p5 -> p5 5;
@@ -160,6 +156,14 @@ P0 {
     p4 -> p2 2;
     p3 -> p2 2;
     p2 -> p2 2;
+
+    // 1 has occurred
+    ss -> p1 1;
+    p5 -> p1 1;
+    p4 -> p1 1;
+    p3 -> p1 1;
+    p2 -> p1 1;
+    p1 -> p1 1;
 
     accepting: p1,p2,p3,p4,p5;
 }
@@ -168,14 +172,6 @@ P1 {
     init: si;
     si -> ss E;
 
-    // Losing turn
-    ss -> p1 1;
-    p1 -> p1 1;
-
-    // Losing turn
-    ss -> p1 1;
-    p1 -> p1 1;
-
     // 5 has occurred
     ss -> p5 5;
     p5 -> p5 5;
@@ -197,6 +193,14 @@ P1 {
     p4 -> p2 2;
     p3 -> p2 2;
     p2 -> p2 2;
+
+    // 1 has occurred
+    ss -> p1 1;
+    p5 -> p1 1;
+    p4 -> p1 1;
+    p3 -> p1 1;
+    p2 -> p1 1;
+    p1 -> p1 1;
 
     accepting: p1,p2,p3,p4,p5;
 }
