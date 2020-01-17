@@ -1,0 +1,141 @@
+// 1-robot-vacuum-quadratic.txt
+Initial {
+    init: si;
+
+    si -> s0 S;
+    s0 -> s1 1i;
+    s1 -> s1 0i;
+    accepting: s0,s1;
+}    
+
+Transition {
+    init: si;
+    si -> se E/S;
+    si -> ss S/E;
+
+    // environment can set any idle process to request
+
+    se -> se 0i/0i;
+    se -> se 1i/1i;
+    se -> se 0r/0r;
+    se -> se 1r/1r;
+    se -> se 0i/0r;
+    se -> se 1i/1r;
+    
+    se -> sc 1r/1c1;
+    se -> sc 0c1/0c2;
+    se -> sc 0c1/0c3;
+    se -> sc 0c2/0c3;
+    se -> sc 0c3/0i;    
+    se -> sc 1c1/1c2;
+    se -> sc 1c1/1c3;
+    se -> sc 1c2/1c3;
+    se -> sc 1c3/1i;  
+
+    sc -> sc 0i/0i;
+    sc -> sc 1i/1i;
+    sc -> sc 0r/0r;
+    sc -> sc 1r/1r;
+    sc -> sc 0i/0r;
+    sc -> sc 1i/1r;
+
+    // system can move token to the right until it finds a request and stays at the request position
+    // do not exceed modulo ring size
+    ss -> ss 0i/0i;
+    ss -> ss 0r/0r;
+    ss -> ss 0c1/0c1;
+    ss -> ss 0c2/0c2;
+    ss -> ss 0c3/0c3; 
+    // current position is not idle -> move until r is found or there exists no r
+    ss -> ss 0i/0i; 
+
+
+
+
+    accepting: sf, sa;
+}
+
+Bad {
+    init: s0;
+
+    s0 -> s1 E;
+    s0 -> s1 S;
+    s1 -> s1 0i;
+    s1 -> s1 1i;
+    s1 -> s1 0r;
+    s1 -> s1 1r;
+
+    s1 -> s2 0c1;
+    s1 -> s2 0c2;
+    s1 -> s2 0c3;
+    s1 -> s2 1c1;
+    s1 -> s2 2c2;
+    s1 -> s2 3c3;
+
+    s2 -> s2 0i;
+    s2 -> s2 1i;
+    s2 -> s2 0r;
+    s2 -> s2 1r;
+
+    s2 -> s3 0c1;
+    s2 -> s3 0c2;
+    s2 -> s3 0c3;
+    s2 -> s3 1c1;
+    s2 -> s3 1c2;
+    s2 -> s3 1c3;
+
+    s3 -> s3 0i;
+    s3 -> s3 1i;
+    s3 -> s3 0r;
+    s3 -> s3 1r;
+    s3 -> s3 0c1;
+    s3 -> s3 0c2;
+    s3 -> s3 0c3;
+    s3 -> s3 1c1;
+    s3 -> s3 1c2;
+    s3 -> s3 1c3;
+
+    accepting: s2;
+}
+
+P0 {
+    init: si;
+
+    si -> s0 S;
+    s0 -> s0 0i;
+    s0 -> s0 1i;
+    s0 -> s0 0r;
+    s0 -> s0 1r;
+    s0 -> s0 0c1;
+    s0 -> s0 0c2;
+    s0 -> s0 0c3;
+    s0 -> s0 1c1;
+    s0 -> s0 1c2;
+    s0 -> s0 1c3;
+
+    accepting: s0;
+
+}
+
+P1 {
+    init: si;
+
+    si -> s0 E;
+    s0 -> s0 0i;
+    s0 -> s0 1i;
+    s0 -> s0 0r;
+    s0 -> s0 1r;
+    s0 -> s0 0c1;
+    s0 -> s0 0c2;
+    s0 -> s0 0c3;
+    s0 -> s0 1c1;
+    s0 -> s0 1c2;
+    s0 -> s0 1c3;
+
+    accepting: s0;
+
+}
+
+
+transducerStateGuessing: 1 .. 10;
+automatonStateGuessing: 0 .. 4;
