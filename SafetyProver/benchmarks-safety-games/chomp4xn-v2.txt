@@ -48,6 +48,10 @@ Transition {
     si -> sl S/S;
 
     // Winning/losing turn
+    sl -> s1 5/1;
+    sl -> s1 4/1;
+    sl -> s1 3/1;
+    sl -> s1 2/1;
     sl -> s1 1/1; 
 
     // choose a position to chomp
@@ -77,10 +81,6 @@ Transition {
     // after chomping somewhere
 
     // chomped at y=1
-    ss -> s1 5/1;
-    ss -> s1 4/1;
-    ss -> s1 3/1;
-    ss -> s1 2/1;
     s1 -> s1 5/1;
     s1 -> s1 4/1;
     s1 -> s1 3/1;
