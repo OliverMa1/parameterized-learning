@@ -44,14 +44,10 @@ public class FiniteGames {
             //LOGGER.debug("computing automaton describing reachable configurations of length " + wordLen);
 
             Map<List<Integer>,Integer> v0_markings = new HashMap<>();
-            //TODO might need a copy method, this just copies the reference...
             marked = AutomataUtility.getWordAutomaton(B, wordLen);
-            LOGGER.debug(B.prettyPrint("\n--------------\nPlayer 1 Attractor which can reach Bad:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
-
-            LOGGER.debug(marked.prettyPrint("\n--------------\n Initially marked words:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+            //LOGGER.debug(B.prettyPrint("\n--------------\nPlayer 1 Attractor which can reach Bad:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+           // LOGGER.debug(marked.prettyPrint("\n--------------\n Initially marked words:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
             Automata marked_prev = null;
-            // TODO equals method for automata might be required... or just intersection and emptiness check? or save set of
-            // TODO marked vertices and compare sets, test Automata_equality if problems happen here
             int i = 0;
             while(!Automata_equality(marked,marked_prev)){
                 LOGGER.debug("Counter i is at : "  + i);
@@ -67,50 +63,48 @@ public class FiniteGames {
                 Automata predecessors_v0 = AutomataUtility.getIntersection(predecessors, v_0);
                 Automata predecessors_v1 = AutomataUtility.minimiseAcyclic(AutomataUtility.getIntersection(predecessors,v_1));
                 LOGGER.debug(predecessors_v1.prettyPrint("\n--------------\nP1 predecessors:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
-
+                // TODO is this right?
+                predecessors_v0 = AutomataUtility.minimiseAcyclic(AutomataUtility.getDifference(predecessors_v0,marked));
                 List<List<Integer>> v0_predecessor_vertices = AutomataUtility.getWords(predecessors_v0, wordLen);
                 //LOGGER.debug(predecessors.prettyPrint("Predecessors", NoInvariantException.getIndexToLabelMapping()));
                 /*
                  Save all v0 vertices with amount of successors in a map
                  */
+                LOGGER.debug(" Amount of v0 pred: " + v0_predecessor_vertices.size());
+                // TODO Bottleneck in computation
                 for(List<Integer> v : v0_predecessor_vertices){
                     if(!v0_markings.containsKey(v)){
                         Automata image_v = VerificationUtility.getImage(v,T,marked.getNumLabels());
                         int n = AutomataUtility.getWords(image_v,wordLen).size();
-                        for (List<Integer> words : AutomataUtility.getWords(image_v,wordLen)){
-                            if (k < 140) {
-                                LOGGER.debug(" Successors of : " + NoInvariantException.getLabeledWord(v) + " : " + NoInvariantException.getLabeledWord(words) + " is word accepted in v_1" + v_1.accepts(words));
-                                k = k +1;
-                            }
-                        }
-                        LOGGER.debug( "predecessor added to v0 markings: " + NoInvariantException.getLabeledWord(v) + "marking: " + n);
+                       // LOGGER.debug( "predecessor added to v0 markings: " + NoInvariantException.getLabeledWord(v) + "marking: " + n);
                         v0_markings.put(v,n);
                     }
                 }
                 // Iterate over all saved successors, if n = 0, ignore, otherwise check_p0_marking for them
+
                 for (List<Integer> v0_vertex : v0_markings.keySet()){
                     int n = v0_markings.get(v0_vertex);
                     boolean add_v0 = check_p0_marking(marked, v0_vertex, n, wordLen);
                     if (add_v0){
                         v0_markings.put(v0_vertex,0);
-                        LOGGER.debug( "predecessor added to marked: " + NoInvariantException.getLabeledWord(v0_vertex) + "marking: " + n);
-                        Automata successors = AutomataUtility.minimiseAcyclic(VerificationUtility.getImage(produceWordAutomaton(v0_vertex,I.getNumLabels()),T));
-                        LOGGER.debug(successors.prettyPrint("\n--------------\nSuccesors of the worda above:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+                       // LOGGER.debug( "predecessor added to marked: " + NoInvariantException.getLabeledWord(v0_vertex) + "marking: " + n);
+                       // Automata successors = AutomataUtility.minimiseAcyclic(VerificationUtility.getImage(produceWordAutomaton(v0_vertex,I.getNumLabels()),T));
+                      //  LOGGER.debug(successors.prettyPrint("\n--------------\nSuccesors of the worda above:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
                         marked = AutomataUtility.getUnion(marked, produceWordAutomaton(v0_vertex, marked.getNumLabels()));
                     }
                 }
 
                 marked = AutomataUtility.getUnion(marked, predecessors_v1);
                 marked = AutomataUtility.minimiseAcyclic(marked);
-                LOGGER.debug(marked.prettyPrint("\n--------------\nMarked at End of Loop:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
-                LOGGER.debug("Is marked equals mit marked prev?: " + Automata_equality(marked,marked_prev));
-                LOGGER.debug(marked_prev.prettyPrint("\n--------------\nMark Prev Test:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+              //  LOGGER.debug(marked.prettyPrint("\n--------------\nMarked at End of Loop:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
+               // LOGGER.debug("Is marked equals mit marked prev?: " + Automata_equality(marked,marked_prev));
+               // LOGGER.debug(marked_prev.prettyPrint("\n--------------\nMark Prev Test:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
 
 
             }
 
             reachableStateAutomata.put(wordLen, marked);
-            LOGGER.debug(marked.prettyPrint("\n--------------\nPlayer 1 Attractor which can reach Bad:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n" + "for word length: " + wordLen);
+           // LOGGER.debug(marked.prettyPrint("\n--------------\nPlayer 1 Attractor which can reach Bad:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n" + "for word length: " + wordLen);
             return marked;
         }
         return marked;
