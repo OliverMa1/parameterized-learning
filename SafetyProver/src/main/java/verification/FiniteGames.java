@@ -41,7 +41,7 @@ public class FiniteGames {
             }
         }
         if (marked == null) {
-            //LOGGER.debug("computing automaton describing reachable configurations of length " + wordLen);
+            LOGGER.debug("computing automaton describing reachable configurations of length " + wordLen);
 
             Map<List<Integer>,Integer> v0_markings = new HashMap<>();
             marked = AutomataUtility.getWordAutomaton(B, wordLen);
@@ -104,7 +104,7 @@ public class FiniteGames {
             }
 
             reachableStateAutomata.put(wordLen, marked);
-           // LOGGER.debug(marked.prettyPrint("\n--------------\nPlayer 1 Attractor which can reach Bad:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n" + "for word length: " + wordLen);
+            LOGGER.debug(marked.prettyPrint("\n--------------\nPlayer 1 Attractor which can reach Bad:", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n" + "for word length: " + wordLen);
             return marked;
         }
         return marked;

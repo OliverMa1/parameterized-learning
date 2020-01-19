@@ -2,254 +2,377 @@
 Initial {
     init: si;
 
-    si -> s0 S;
-    s0 -> s0 0;
-
-    accepting: s0;
+    si -> s0 S0;
+    s0 -> s1 0;
+    s1 -> s1 0;
+    accepting: s1;
 }    
 
 Transition {
     init: si;
+    // 10 turns of add 1 unit to a bucket
 
-    // Empty P0
-    si -> s0;
-    s0 -> s1 S/E; 
-    s1 -> s1 000/000;
+    si -> s1 E0/S1;
+    si -> s1 E1/S2;
+    si -> s1 E2/S3;
+    si -> s1 E3/S4;
+    si -> s1 E4/S5;
+    si -> s1 E5/S6;
+    si -> s1 E6/S7;
+    si -> s1 E7/S8;
+    si -> s1 E8/S9;
+    si -> s1 E9/S0;
 
-    // Empty P1
-    si -> e0;
-    e0 -> e1 E/E; 
-    e1 -> e1 000/000;
+    // Do nothing except S0 has a turn
+    si -> s1a S1/E1;
+    si -> s1a S2/E2;
+    si -> s1a S3/E3;
+    si -> s1a S4/E4;
+    si -> s1a S5/E5;
+    si -> s1a S6/E6;
+    si -> s1a S7/E7;
+    si -> s1a S8/E8;
+    si -> s1a S9/E9;
+    // DO cindy turn
+    si -> s0 S0/E0;
+    // remove two adjacent buckets, no ring property
+    s0 -> s0 0/0;
+    s0 -> s0 1/1;
+    s0 -> s0 2/2;
+    s0 -> s0 3/3;
+    s0 -> s0 4/4;
+    s0 -> s0 5/5;
+    s0 -> s0 6/6;
+    s0 -> s0 7/7;
+    s0 -> s0 8/8;
+    s0 -> s0 9/9;
+    s0 -> s0 10/10;
+    s0 -> s0 11/11;
+    s0 -> s0 12/12;
+    s0 -> s0 13/13;
+    s0 -> s0 14/14;
+    s0 -> s0 15/15;
+    s0 -> s0 16/16;
+    s0 -> s0 17/17;
+    s0 -> s0 18/18;
+    s0 -> s0 19/19;
+    s0 -> s0 20/20;
+    s0 -> s0 21/21;
+    s0 -> s0 22/22;
+    s0 -> s0 23/23;
+    s0 -> s0 24/24;
+    s0 -> s0 25/25;
+    s0 -> s0 26/26;
+    s0 -> s0 27/27;
+    s0 -> s0 28/28;
+    s0 -> s0 29/29;
+    s0 -> s0 30/30;
+    s0 -> s0 T/T;
+    // empty first bucket
+    s0 -> sb1 0/0;
+    s0 -> sb1 1/0;
+    s0 -> sb1 2/0;
+    s0 -> sb1 3/0;
+    s0 -> sb1 4/0;
+    s0 -> sb1 5/0;
+    s0 -> sb1 6/0;
+    s0 -> sb1 7/0;
+    s0 -> sb1 8/0;
+    s0 -> sb1 9/0;
+    s0 -> sb1 10/0;
+    s0 -> sb1 11/0;
+    s0 -> sb1 12/0;
+    s0 -> sb1 13/0;
+    s0 -> sb1 14/0;
+    s0 -> sb1 15/0;
+    s0 -> sb1 16/0;
+    s0 -> sb1 17/0;
+    s0 -> sb1 18/0;
+    s0 -> sb1 19/0;
+    s0 -> sb1 20/0;
+    s0 -> sb1 21/0;
+    s0 -> sb1 22/0;
+    s0 -> sb1 23/0;
+    s0 -> sb1 24/0;
+    s0 -> sb1 25/0;
+    s0 -> sb1 26/0;
+    s0 -> sb1 27/0;
+    s0 -> sb1 28/0;
+    s0 -> sb1 29/0;
+    s0 -> sb1 30/0;
+    s0 -> sb1 T/0;
 
+    sb1 -> sb2 0/0;
+    sb1 -> sb2 1/0;
+    sb1 -> sb2 2/0;
+    sb1 -> sb2 3/0;
+    sb1 -> sb2 4/0;
+    sb1 -> sb2 5/0;
+    sb1 -> sb2 6/0;
+    sb1 -> sb2 7/0;
+    sb1 -> sb2 8/0;
+    sb1 -> sb2 9/0;
+    sb1 -> sb2 10/0;
+    sb1 -> sb2 11/0;
+    sb1 -> sb2 12/0;
+    sb1 -> sb2 13/0;
+    sb1 -> sb2 14/0;
+    sb1 -> sb2 15/0;
+    sb1 -> sb2 16/0;
+    sb1 -> sb2 17/0;
+    sb1 -> sb2 18/0;
+    sb1 -> sb2 19/0;
+    sb1 -> sb2 20/0;
+    sb1 -> sb2 21/0;
+    sb1 -> sb2 22/0;
+    sb1 -> sb2 23/0;
+    sb1 -> sb2 24/0;
+    sb1 -> sb2 25/0;
+    sb1 -> sb2 26/0;
+    sb1 -> sb2 27/0;
+    sb1 -> sb2 28/0;
+    sb1 -> sb2 29/0;
+    sb1 -> sb2 30/0;
+    sb1 -> sb2 T/0;
+    sb2 -> sb2 0/0;
+    sb2 -> sb2 1/1;
+    sb2 -> sb2 2/2;
+    sb2 -> sb2 3/3;
+    sb2 -> sb2 4/4;
+    sb2 -> sb2 5/5;
+    sb2 -> sb2 6/6;
+    sb2 -> sb2 7/7;
+    sb2 -> sb2 8/8;
+    sb2 -> sb2 9/9;
+    sb2 -> sb2 10/10;
+    sb2 -> sb2 11/11;
+    sb2 -> sb2 12/12;
+    sb2 -> sb2 13/13;
+    sb2 -> sb2 14/14;
+    sb2 -> sb2 15/15;
+    sb2 -> sb2 16/16;
+    sb2 -> sb2 17/17;
+    sb2 -> sb2 18/18;
+    sb2 -> sb2 19/19;
+    sb2 -> sb2 20/20;
+    sb2 -> sb2 21/21;
+    sb2 -> sb2 22/22;
+    sb2 -> sb2 23/23;
+    sb2 -> sb2 24/24;
+    sb2 -> sb2 25/25;
+    sb2 -> sb2 26/26;
+    sb2 -> sb2 27/27;
+    sb2 -> sb2 28/28;
+    sb2 -> sb2 29/29;
+    sb2 -> sb2 30/30;
+    sb2 -> sb2 T/T;
+    
+    // cindy turn with first and last bucket
+    s0 -> sbi 0/0;
+    s0 -> sbi 1/0;
+    s0 -> sbi 2/0;
+    s0 -> sbi 3/0;
+    s0 -> sbi 4/0;
+    s0 -> sbi 5/0;
+    s0 -> sbi 6/0;
+    s0 -> sbi 7/0;
+    s0 -> sbi 8/0;
+    s0 -> sbi 9/0;
+    s0 -> sbi 10/0;
+    s0 -> sbi 11/0;
+    s0 -> sbi 12/0;
+    s0 -> sbi 13/0;
+    s0 -> sbi 14/0;
+    s0 -> sbi 15/0;
+    s0 -> sbi 16/0;
+    s0 -> sbi 17/0;
+    s0 -> sbi 18/0;
+    s0 -> sbi 19/0;
+    s0 -> sbi 20/0;
+    s0 -> sbi 21/0;
+    s0 -> sbi 22/0;
+    s0 -> sbi 23/0;
+    s0 -> sbi 24/0;
+    s0 -> sbi 25/0;
+    s0 -> sbi 26/0;
+    s0 -> sbi 27/0;
+    s0 -> sbi 28/0;
+    s0 -> sbi 29/0;
+    s0 -> sbi 30/0;
+    s0 -> sbi T/0;
 
-    // Nonempty: first pile P1
-    si -> p0;
-    p0 -> p1 E/S;
-    p1 -> p1 000/000;
-    p1 -> p1 001/001;
-    p1 -> p1 010/010;
-    p1 -> p1 011/011;
-    p1 -> p1 100/100;
-    p1 -> p1 101/101;
-    p1 -> p1 110/110;
-    p1 -> p1 111/111;
+    sbi -> sbi 0/0;
+    sbi -> sbi 1/1;
+    sbi -> sbi 2/2;
+    sbi -> sbi 3/3;
+    sbi -> sbi 4/4;
+    sbi -> sbi 5/5;
+    sbi -> sbi 6/6;
+    sbi -> sbi 7/7;
+    sbi -> sbi 8/8;
+    sbi -> sbi 9/9;
+    sbi -> sbi 10/10;
+    sbi -> sbi 11/11;
+    sbi -> sbi 12/12;
+    sbi -> sbi 13/13;
+    sbi -> sbi 14/14;
+    sbi -> sbi 15/15;
+    sbi -> sbi 16/16;
+    sbi -> sbi 17/17;
+    sbi -> sbi 18/18;
+    sbi -> sbi 19/19;
+    sbi -> sbi 20/20;
+    sbi -> sbi 21/21;
+    sbi -> sbi 22/22;
+    sbi -> sbi 23/23;
+    sbi -> sbi 24/24;
+    sbi -> sbi 25/25;
+    sbi -> sbi 26/26;
+    sbi -> sbi 27/27;
+    sbi -> sbi 28/28;
+    sbi -> sbi 29/29;
+    sbi -> sbi 30/30;
+    sbi -> sbi T/T;
 
-        // the first digit where the number differs (and has to decrease)
-    p1 -> p2 100/000;
-    p1 -> p2 101/001;
-    p1 -> p2 110/010;
-    p1 -> p2 111/011;
+    sbi -> sbif 0/0;
+    sbi -> sbif 1/0;
+    sbi -> sbif 2/0;
+    sbi -> sbif 3/0;
+    sbi -> sbif 4/0;
+    sbi -> sbif 5/0;
+    sbi -> sbif 6/0;
+    sbi -> sbif 7/0;
+    sbi -> sbif 8/0;
+    sbi -> sbif 9/0;
+    sbi -> sbif 10/0;
+    sbi -> sbif 11/0;
+    sbi -> sbif 12/0;
+    sbi -> sbif 13/0;
+    sbi -> sbif 14/0;
+    sbi -> sbif 15/0;
+    sbi -> sbif 16/0;
+    sbi -> sbif 17/0;
+    sbi -> sbif 18/0;
+    sbi -> sbif 19/0;
+    sbi -> sbif 20/0;
+    sbi -> sbif 21/0;
+    sbi -> sbif 22/0;
+    sbi -> sbif 23/0;
+    sbi -> sbif 24/0;
+    sbi -> sbif 25/0;
+    sbi -> sbif 26/0;
+    sbi -> sbif 27/0;
+    sbi -> sbif 28/0;
+    sbi -> sbif 29/0;
+    sbi -> sbif 30/0;
+    sbi -> sbif T/0;
 
-        // after this, it doesn't matter
-    p2 -> p2 000/000;
-    p2 -> p2 001/001;
-    p2 -> p2 010/010;
-    p2 -> p2 011/011;
-    p2 -> p2 100/100;
-    p2 -> p2 101/101;
-    p2 -> p2 110/110;
-    p2 -> p2 111/111;
+    // stepmother add 1 unit
 
-    p2 -> p2 000/100;
-    p2 -> p2 001/101;
-    p2 -> p2 010/110;
-    p2 -> p2 011/111;
-    p2 -> p2 100/000;
-    p2 -> p2 101/001;
-    p2 -> p2 110/010;
-    p2 -> p2 111/011;
+    s1 -> s1 0/0;
+    s1 -> s1 1/1;
+    s1 -> s1 2/2;
+    s1 -> s1 3/3;
+    s1 -> s1 4/4;
+    s1 -> s1 5/5;
+    s1 -> s1 6/6;
+    s1 -> s1 7/7;
+    s1 -> s1 8/8;
+    s1 -> s1 9/9;
+    s1 -> s1 10/10;
+    s1 -> s1 11/11;
+    s1 -> s1 12/12;
+    s1 -> s1 13/13;
+    s1 -> s1 14/14;
+    s1 -> s1 15/15;
+    s1 -> s1 16/16;
+    s1 -> s1 17/17;
+    s1 -> s1 18/18;
+    s1 -> s1 19/19;
+    s1 -> s1 20/20;
+    s1 -> s1 21/21;
+    s1 -> s1 22/22;
+    s1 -> s1 23/23;
+    s1 -> s1 24/24;
+    s1 -> s1 25/25;
+    s1 -> s1 26/26;
+    s1 -> s1 27/27;
+    s1 -> s1 28/28;
+    s1 -> s1 29/29;
+    s1 -> s1 30/30;
+    s1 -> s1 T/T;
+    s1 -> sa;
+    sa -> s1a 0/1;
+    sa -> s1a 1/2;
+    sa -> s1a 2/3;
+    sa -> s1a 3/4;
+    sa -> s1a 4/5;
+    sa -> s1a 5/6;
+    sa -> s1a 6/7;
+    sa -> s1a 7/8;
+    sa -> s1a 8/9;
+    sa -> s1a 9/10;
+    sa -> s1a 10/11;
+    sa -> s1a 11/12;
+    sa -> s1a 12/13;
+    sa -> s1a 13/14;
+    sa -> s1a 14/15;
+    sa -> s1a 15/16;
+    sa -> s1a 16/17;
+    sa -> s1a 17/18;
+    sa -> s1a 18/19;
+    sa -> s1a 19/20;
+    sa -> s1a 20/21;
+    sa -> s1a 21/22;
+    sa -> s1a 22/23;
+    sa -> s1a 23/24;
+    sa -> s1a 24/25;
+    sa -> s1a 25/26;
+    sa -> s1a 26/27;
+    sa -> s1a 27/28;
+    sa -> s1a 28/29;
+    sa -> s1a 29/30;
+    sa -> s1a 30/T;
+    sa -> s1a T/T;   
+    s1a -> s1a 0/0;
+    s1a -> s1a 1/1;
+    s1a -> s1a 2/2;
+    s1a -> s1a 3/3;
+    s1a -> s1a 4/4;
+    s1a -> s1a 5/5;
+    s1a -> s1a 6/6;
+    s1a -> s1a 7/7;
+    s1a -> s1a 8/8;
+    s1a -> s1a 9/9;
+    s1a -> s1a 10/10;
+    s1a -> s1a 11/11;
+    s1a -> s1a 12/12;
+    s1a -> s1a 13/13;
+    s1a -> s1a 14/14;
+    s1a -> s1a 15/15;
+    s1a -> s1a 16/16;
+    s1a -> s1a 17/17;
+    s1a -> s1a 18/18;
+    s1a -> s1a 19/19;
+    s1a -> s1a 20/20;
+    s1a -> s1a 21/21;
+    s1a -> s1a 22/22;
+    s1a -> s1a 23/23;
+    s1a -> s1a 24/24;
+    s1a -> s1a 25/25;
+    s1a -> s1a 26/26;
+    s1a -> s1a 27/27;
+    s1a -> s1a 28/28;
+    s1a -> s1a 29/29;
+    s1a -> s1a 30/30;
+    s1a -> s1a T/T;
 
-    // Nonempty: second pile P1
-    si -> q0;
-    q0 -> q1 E/S;
-    q1 -> q1 000/000;
-    q1 -> q1 001/001;
-    q1 -> q1 010/010;
-    q1 -> q1 011/011;
-    q1 -> q1 100/100;
-    q1 -> q1 101/101;
-    q1 -> q1 110/110;
-    q1 -> q1 111/111;
-
-        // the first digit where the number differs (and has to decrease)
-    q1 -> q2 010/000;
-    q1 -> q2 011/001;
-    q1 -> q2 110/100;
-    q1 -> q2 111/101;
-
-        // after this, it doesn't matter
-    q2 -> q2 000/000;
-    q2 -> q2 001/001;
-    q2 -> q2 010/010;
-    q2 -> q2 011/011;
-    q2 -> q2 100/100;
-    q2 -> q2 101/101;
-    q2 -> q2 110/110;
-    q2 -> q2 111/111;
-
-    q2 -> q2 000/010;
-    q2 -> q2 001/011;
-    q2 -> q2 100/110;
-    q2 -> q2 101/111;
-    q2 -> q2 010/000;
-    q2 -> q2 011/001;
-    q2 -> q2 110/100;
-    q2 -> q2 111/101;
-
-    // Nonempty: third pile P1
-    si -> r0;
-    r0 -> r1 E/S;
-    r1 -> r1 000/000;
-    r1 -> r1 001/001;
-    r1 -> r1 010/010;
-    r1 -> r1 011/011;
-    r1 -> r1 100/100;
-    r1 -> r1 101/101;
-    r1 -> r1 110/110;
-    r1 -> r1 111/111;
-
-        // the first digit where the number differs (and has to decrease)
-    r1 -> r2 001/000;
-    r1 -> r2 011/010;
-    r1 -> r2 101/100;
-    r1 -> r2 111/110;
-
-        // after this, it doesn't matter
-    r2 -> r2 000/000;
-    r2 -> r2 001/001;
-    r2 -> r2 010/010;
-    r2 -> r2 011/011;
-    r2 -> r2 100/100;
-    r2 -> r2 101/101;
-    r2 -> r2 110/110;
-    r2 -> r2 111/111;
-
-    r2 -> r2 000/001;
-    r2 -> r2 010/011;
-    r2 -> r2 100/101;
-    r2 -> r2 110/111;
-    r2 -> r2 001/000;
-    r2 -> r2 011/010;
-    r2 -> r2 101/100;
-    r2 -> r2 111/110;
-
-    // Nonempty: first pile P0
-    si -> a0;
-    a0 -> a1 S/E;
-    a1 -> a1 000/000;
-    a1 -> a1 001/001;
-    a1 -> a1 010/010;
-    a1 -> a1 011/011;
-    a1 -> a1 100/100;
-    a1 -> a1 101/101;
-    a1 -> a1 110/110;
-    a1 -> a1 111/111;
-
-        // the first digit where the number differs (and has to decrease)
-    a1 -> a2 100/000;
-    a1 -> a2 101/001;
-    a1 -> a2 110/010;
-    a1 -> a2 111/011;
-
-        // after this, it doesn't matter
-    a2 -> a2 000/000;
-    a2 -> a2 001/001;
-    a2 -> a2 010/010;
-    a2 -> a2 011/011;
-    a2 -> a2 100/100;
-    a2 -> a2 101/101;
-    a2 -> a2 110/110;
-    a2 -> a2 111/111;
-
-    a2 -> a2 000/100;
-    a2 -> a2 001/101;
-    a2 -> a2 010/110;
-    a2 -> a2 011/111;
-    a2 -> a2 100/000;
-    a2 -> a2 101/001;
-    a2 -> a2 110/010;
-    a2 -> a2 111/011;
-
-    // Nonempty: second pile P1
-    si -> b0;
-    b0 -> b1 S/E;
-    b1 -> b1 000/000;
-    b1 -> b1 001/001;
-    b1 -> b1 010/010;
-    b1 -> b1 011/011;
-    b1 -> b1 100/100;
-    b1 -> b1 101/101;
-    b1 -> b1 110/110;
-    b1 -> b1 111/111;
-
-        // the first digit where the number differs (and has to decrease)
-    b1 -> b2 010/000;
-    b1 -> b2 011/001;
-    b1 -> b2 110/100;
-    b1 -> b2 111/101;
-
-        // after this, it doesn't matter
-    b2 -> b2 000/000;
-    b2 -> b2 001/001;
-    b2 -> b2 010/010;
-    b2 -> b2 011/011;
-    b2 -> b2 100/100;
-    b2 -> b2 101/101;
-    b2 -> b2 110/110;
-    b2 -> b2 111/111;
-
-    b2 -> b2 000/010;
-    b2 -> b2 001/011;
-    b2 -> b2 100/110;
-    b2 -> b2 101/111;
-    b2 -> b2 010/000;
-    b2 -> b2 011/001;
-    b2 -> b2 110/100;
-    b2 -> b2 111/101;
-
-    // Nonempty: third pile P1
-    si -> c0;
-    c0 -> c1 S/E;
-    c1 -> c1 000/000;
-    c1 -> c1 001/001;
-    c1 -> c1 010/010;
-    c1 -> c1 011/011;
-    c1 -> c1 100/100;
-    c1 -> c1 101/101;
-    c1 -> c1 110/110;
-    c1 -> c1 111/111;
-
-        // the first digit where the number differs (and has to decrease)
-    c1 -> c2 001/000;
-    c1 -> c2 011/010;
-    c1 -> c2 101/100;
-    c1 -> c2 111/110;
-
-        // after this, it doesn't matter
-    c2 -> c2 000/000;
-    c2 -> c2 001/001;
-    c2 -> c2 010/010;
-    c2 -> c2 011/011;
-    c2 -> c2 100/100;
-    c2 -> c2 101/101;
-    c2 -> c2 110/110;
-    c2 -> c2 111/111;
-
-    c2 -> c2 000/001;
-    c2 -> c2 010/011;
-    c2 -> c2 100/101;
-    c2 -> c2 110/111;
-    c2 -> c2 001/000;
-    c2 -> c2 011/010;
-    c2 -> c2 101/100;
-    c2 -> c2 111/110;
-
-    accepting: s1, e1, p2, q2, r2, a2, b2, c2;
+    accepting: s1a, sbif, sb2;
 }
 
 Bad {
     init: s0;
-    s0 -> s1 S;
+    s0 -> s1 S0;
     s1 -> s1 0;
     s1 -> s1 1;
     s1 -> s1 2;
@@ -283,7 +406,6 @@ Bad {
     s1 -> s1 30;
     s1 -> s2 T;
 
-    s2 -> s2 S;
     s2 -> s2 0;
     s2 -> s2 1;
     s2 -> s2 2;
@@ -322,34 +444,98 @@ Bad {
 P0 {
     init: si;
 
-    si -> s0 S;
-    s0 -> s0 000;
-    s0 -> s0 001;
-    s0 -> s0 010;
-    s0 -> s0 011;
-    s0 -> s0 100;
-    s0 -> s0 101;
-    s0 -> s0 110;
-    s0 -> s0 111;
-
-    accepting: s0;
+    si -> s1 S0;
+    si -> s1 S1;
+    si -> s1 S2;
+    si -> s1 S3;
+    si -> s1 S4;
+    si -> s1 S5;
+    si -> s1 S6;
+    si -> s1 S7;
+    si -> s1 S8;
+    si -> s1 S9;
+    s1 -> s1 0;
+    s1 -> s1 1;
+    s1 -> s1 2;
+    s1 -> s1 3;
+    s1 -> s1 4;
+    s1 -> s1 5;
+    s1 -> s1 6;
+    s1 -> s1 7;
+    s1 -> s1 8;
+    s1 -> s1 9;
+    s1 -> s1 10;
+    s1 -> s1 11;
+    s1 -> s1 12;
+    s1 -> s1 13;
+    s1 -> s1 14;
+    s1 -> s1 15;
+    s1 -> s1 16;
+    s1 -> s1 17;
+    s1 -> s1 18;
+    s1 -> s1 19;
+    s1 -> s1 20;
+    s1 -> s1 21;
+    s1 -> s1 22;
+    s1 -> s1 23;
+    s1 -> s1 24;
+    s1 -> s1 25;
+    s1 -> s1 26;
+    s1 -> s1 27;
+    s1 -> s1 28;
+    s1 -> s1 29;
+    s1 -> s1 30;
+    s1 -> s1 T;
+    accepting: s1;
 
 }
 
 P1 {
     init: si;
 
-    si -> s0 E;
-    s0 -> s0 000;
-    s0 -> s0 001;
-    s0 -> s0 010;
-    s0 -> s0 011;
-    s0 -> s0 100;
-    s0 -> s0 101;
-    s0 -> s0 110;
-    s0 -> s0 111;
-
-    accepting: s0;
+    si -> s1 E0;
+    si -> s1 E1;
+    si -> s1 E2;
+    si -> s1 E3;
+    si -> s1 E4;
+    si -> s1 E5;
+    si -> s1 E6;
+    si -> s1 E7;
+    si -> s1 E8;
+    si -> s1 E9;
+    s1 -> s1 0;
+    s1 -> s1 1;
+    s1 -> s1 2;
+    s1 -> s1 3;
+    s1 -> s1 4;
+    s1 -> s1 5;
+    s1 -> s1 6;
+    s1 -> s1 7;
+    s1 -> s1 8;
+    s1 -> s1 9;
+    s1 -> s1 10;
+    s1 -> s1 11;
+    s1 -> s1 12;
+    s1 -> s1 13;
+    s1 -> s1 14;
+    s1 -> s1 15;
+    s1 -> s1 16;
+    s1 -> s1 17;
+    s1 -> s1 18;
+    s1 -> s1 19;
+    s1 -> s1 20;
+    s1 -> s1 21;
+    s1 -> s1 22;
+    s1 -> s1 23;
+    s1 -> s1 24;
+    s1 -> s1 25;
+    s1 -> s1 26;
+    s1 -> s1 27;
+    s1 -> s1 28;
+    s1 -> s1 29;
+    s1 -> s1 30;
+    s1 -> s1 T;
+    accepting: s1;
 
 }
 
