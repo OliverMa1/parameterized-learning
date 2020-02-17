@@ -29,7 +29,10 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
     public MailSafetyGameTeacherWithCache(int numLetters, Automata I, Automata B, Automata v_0, Automata v_1, EdgeWeightedDigraph T) {
         super(numLetters,I,B,v_0,v_1,T);
         finiteStates = new FiniteGames(v_0,v_1, I, T, B);
-
+        Automata bad = AutomataUtility.minimiseAcyclic(AutomataUtility.getComplement(B));
+        B = AutomataUtility.minimiseAcyclic(B);
+        LOGGER.debug(B.prettyPrint("safe", NoInvariantException.getIndexToLabelMapping()));
+        LOGGER.debug(bad.prettyPrint("BAD:", NoInvariantException.getIndexToLabelMapping()));
     }
 
     private void debug(Supplier<String> msg) {

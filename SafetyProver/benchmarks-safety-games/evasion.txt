@@ -2,8 +2,9 @@
 Initial {
     init: si;
 
-    si -> s0 S;
-    s0 -> s2 0011;
+    si -> s0 E;
+    s0 -> s1 0011;
+    s1 -> s2 0011;
     s2 -> s2 0011;
     accepting: s2;
 }    
@@ -332,13 +333,13 @@ Transition {
     // human can stay
     se -> sf;
 
-    accepting: sf, sa;
+    accepting: sf, sa, sueyc, suexc, seyc, sec, suyc, suc, syc, sc;
 }
 
 Bad {
     init: s0;
 
-    s0 -> s1 E;
+    s0 -> s1 S;
     s1 -> s2 0000;
     s1 -> s2 0101;
     s1 -> s2 1010;
