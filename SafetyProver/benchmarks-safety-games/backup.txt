@@ -149,12 +149,14 @@ Bad {
     s1 -> s2;
     s1 -> s3 01;
     s1 -> s3 11;
+
     s2 -> st 01;
     s2 -> st 11;
     st -> st1 01;
     st -> st1 11;
     st -> st 00;
     st -> st 10;
+
     s3 -> s3 01;
     s3 -> s3 11;
     s3 -> st3 00;
@@ -165,10 +167,8 @@ Bad {
     si0 -> si1 10;
     si1 -> si1 00;
     si1 -> si1 10;
-    si1 -> si2 00;
-    si1 -> si2 10;
-    si2 -> si2 01;
-    si2 -> si2 11;
+    si1 -> si2 11;
+    si1 -> si2 01;
     accepting: st1, st3, si2;
 }
 // diagonal safe
@@ -209,4 +209,36 @@ Bad {
     dxc11 -> dxcf 10;   
 
     accepting: dxcf, dx112, dx122, dx0;
+}
+follow unary safe
+Bad {
+// safe
+  init: si;
+    si -> s0 00;
+    si -> s0 11;
+    s0 -> s1 11;
+    s1 -> s1 11;
+    s1 -> sP;
+    s1 -> stop 01;
+    s1 -> sbot 10;
+    stop -> sP;
+    stop -> sP 01;
+    sbot -> sP;
+    sbot -> sP 10;
+    stop -> sP;
+
+    sP -> sP 00;
+    sP -> sy P;
+    sy -> sy1 11;
+    sy1 -> sy1 11;
+    sy1 -> syP;
+    sy1 -> sytop 01;
+    sy1 -> sybot 10;
+    sytop -> syP;
+    sytop -> syP 01;
+    sybot -> syP;
+    sybot -> syP 10;
+    sytop -> syP;
+    syP -> syP 00;
+  accepting: syP;
 }

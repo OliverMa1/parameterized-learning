@@ -1,4 +1,4 @@
-// 1-robot-vacuum-quadratic.txt
+// follow game
 Initial {
     init: si;
 
