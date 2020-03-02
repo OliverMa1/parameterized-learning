@@ -3,16 +3,15 @@ Initial {
     init: si;
 
     si -> s0 11;
-    si -> s0 00;
     s0 -> s1 11;
     s1 -> s1 11;
-    s1 -> s11 11;
-    s11 -> s11 00;
+    s1 -> s11 01;
+    s11 -> s11 01;
     s11 -> s2 P;
     s2 -> s3 11;
     s3 -> s3 11;
-    s3 -> s33 11;
-    s33 -> s33 00;
+    s3 -> s33 01;
+    s33 -> s33 01;
     accepting: s33;
 }    
 
@@ -25,6 +24,12 @@ Transition {
     smovepre -> smove 11/11;
     smove -> smoveR1 01/11;
     smove -> smoveR0 00/10;
+// carry right
+    smove -> smoveRover 00/10;
+    smove -> smoveRover 01/11;
+    smoveRover -> smoveRover 00/10;
+    smoveRover -> smoveRover 01/11;
+    smoveRover -> smoveYdone P/P;
 
     smoveR0 -> smoveR0 00/00;
     smoveR0 -> smoveYdone P/P;
@@ -52,6 +57,12 @@ Transition {
     smoveL1 -> smoveL1 01/01;
     smoveL1 -> smoveL1 00/00;
     smoveL1 -> smoveYdone P/P;
+    // carry left
+    smove -> smoveLover 10/00;
+    smove -> smoveLover 11/01;
+    smoveLover -> smoveLover 10/00;
+    smoveLover -> smoveLover 11/01;
+    smoveLover -> smoveYdone P/P;
 
     // player moves up
     smove -> smoveXdone 11/11;
@@ -67,6 +78,11 @@ Transition {
     smoveU0 -> smoveU0 00/00;
     smoveU1 -> smoveU1 01/01;
     smoveU1 -> smoveU1 00/00;
+// carry up
+    smoveU -> smoveUover 00/10;
+    smoveU -> smoveUover 01/11;
+    smoveUover -> smoveUover 00/10;
+    smoveUover -> smoveUover 01/11;
 
     // player moves down
     smove -> smoveXdone 11/11;
@@ -83,74 +99,28 @@ Transition {
     smoveD0 -> smoveD0 00/00;
     smoveD1 -> smoveD1 01/01;
     smoveD1 -> smoveD1 00/00;
+// carry down
+    smoveD -> smoveDover 10/00;
+    smoveD -> smoveDover 11/01;
+    smoveDover -> smoveDover 10/00;
+    smoveDover -> smoveDover 11/01;
     // player stay
 
-    accepting: smoveD0,smoveD1,smoveU0,smoveU1,smoveYdone0;
+    accepting: smoveD0,smoveD1,smoveU0,smoveU1,smoveYdone0,smoveUover,smoveDover;
 }
 
 Bad {
   init: s0;
   s0 -> s1 11;
   s0 -> s1 00;
-  s0 -> s11 P;
-  s0 -> s11 01;
-  s0 -> s11 10;
   s1 -> s2 11;
-  s1 -> s11 00;
-  s1 -> s11 P;
-  s1 -> s11 01;
-  s1 -> s11 10;
   s2 -> s2 11;
-  s2 -> s3 00;
-  s2 -> s4 P;
-  s2 -> s5 01;
-  s2 -> s6 10;
-  s3 -> s11 11;
-  s3 -> s3 00;
-  s3 -> s4 P;
-  s3 -> s11 01;
-  s3 -> s11 10;
-  s4 -> s7 11;
-  s4 -> s11 00;
-  s4 -> s11 P;
-  s4 -> s11 01;
-  s4 -> s11 10;
-  s5 -> s11 11;
-  s5 -> s3 00;
-  s5 -> s4 P;
-  s5 -> s3 01;
-  s5 -> s11 10;
-  s6 -> s11 11;
-  s6 -> s3 00;
-  s6 -> s4 P;
-  s6 -> s11 01;
-  s6 -> s3 10;
-  s7 -> s7 11;
-  s7 -> s8 00;
-  s7 -> s11 P;
-  s7 -> s9 01;
-  s7 -> s10 10;
-  s8 -> s11 11;
-  s8 -> s8 00;
-  s8 -> s11 P;
-  s8 -> s11 01;
-  s8 -> s11 10;
-  s9 -> s11 11;
-  s9 -> s8 00;
-  s9 -> s11 P;
-  s9 -> s8 01;
-  s9 -> s11 10;
-  s10 -> s11 11;
-  s10 -> s8 00;
-  s10 -> s11 P;
-  s10 -> s11 01;
-  s10 -> s8 10;
-  s11 -> s11 11;
-  s11 -> s11 00;
-  s11 -> s11 P;
-  s11 -> s11 01;
-  s11 -> s11 10;
-  accepting: s0, s1, s2, s3, s4, s5, s6, s11;
+  s2 -> s2 00;
+  s2 -> s3 P;
+  s3 -> s4 11;
+  s4 -> s4 11;
+  s4 -> s4 00;
+  accepting: s4;
 }
 
 P0 {
