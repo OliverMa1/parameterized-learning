@@ -56,23 +56,23 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
         // TODO exclude or include if it is not reachable?
         if (isReachable){
             boolean isBad = finiteStates.isBadReachable(word);
-            LOGGER.debug("Is "+ NoInvariantException.getLabeledWord(word) + " bad? " + isBad);
+            //LOGGER.debug("Is "+ NoInvariantException.getLabeledWord(word) + " bad? " + isBad);
             String labeledWord = LOGGER.isDebugEnabled() ?
                     NoInvariantException.getLabeledWord(word) : null;
 
             if (isBad) {
                 boolean isP1reachable = finiteStates.isReachableP1(word);
                 if(isP1reachable) {
-                    LOGGER.debug("membership query P1: " + labeledWord + " is P1 reachable and bad");
+                    //LOGGER.debug("membership query P1: " + labeledWord + " is P1 reachable and bad");
                     throw new NoInvariantException(word, getInitialStates(), getTransition());
                 }
                 else {
-                    LOGGER.debug(labeledWord + " is reachable from P0 but not P1 and P1 can reach a bad state -> do not include in target language");
+                    // LOGGER.debug(labeledWord + " is reachable from P0 but not P1 and P1 can reach a bad state -> do not include in target language");
                     return false;
                 }
             }
             else{
-                LOGGER.debug(" P1 cannot reach a bad state from the word " + labeledWord + " and it is reachable by either P0 or P1");
+                // LOGGER.debug(" P1 cannot reach a bad state from the word " + labeledWord + " and it is reachable by either P0 or P1");
                 return true;
             }
         }
@@ -83,21 +83,12 @@ public class MailSafetyGameTeacher extends SafetyGameTeacher {
 
     public boolean isCorrectLanguage(Automata hyp, CounterExample cex)
             throws Timer.TimeoutException {
-        LOGGER.debug("found hypothesis, size " + hyp.getStates().length);
-        LOGGER.debug(hyp.prettyPrint("candidate invariant:", NoInvariantException.getIndexToLabelMapping()));
-        LOGGER.debug(DOTPrinter.getString(hyp, NoInvariantException.getIndexToLabelMapping()));
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("found hypothesis, size " + hyp.getStates().length);
-            LOGGER.debug(hyp.prettyPrint("candidate invariant:", NoInvariantException.getIndexToLabelMapping()));
-            LOGGER.debug(DOTPrinter.getString(hyp, NoInvariantException.getIndexToLabelMapping()));
-        }
+        // LOGGER.debug("found hypothesis, size " + hyp.getStates().length);
+        //LOGGER.debug(hyp.prettyPrint("candidate invariant:", NoInvariantException.getIndexToLabelMapping()));
         Timer.tick();
         List<Integer> ex;
-
         // first test: are initial states contained?
         ex = initialCheck(hyp,getInitialStates());
-        LOGGER.debug(getInitialStates().prettyPrint("\n--------------\nConstruct Initial states", NoInvariantException.getIndexToLabelMapping()) + "\n---------------------\n");
-
         Timer.tick();
         if (ex != null) {
             if (LOGGER.isDebugEnabled()) {
