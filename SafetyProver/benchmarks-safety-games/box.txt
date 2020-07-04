@@ -4,11 +4,11 @@ Initial {
 
     si -> s0 S;
     s0 -> s1 00;
-    s0 -> s1 10;
+    s0 -> s1 00;
     s1 -> s1 00;
-    s1 -> s1 10;
-    s1 -> s2 11;
-    s1 -> s2 01;
+    s1 -> s1 00;
+    s1 -> s2 00;
+    s1 -> s2 00;
     accepting: s2;
 }     
 
@@ -17,8 +17,8 @@ Transition {
 
     si -> ss S/E;
     si -> se E/S;
-    si -> sa S/E;
-    si -> sa E/S;
+    si -> ss S/E;
+    si -> se E/S;
     // system addition enabled x-coordinate
     ss -> sf 00/10;
     ss -> sf 01/11;
@@ -82,58 +82,27 @@ Transition {
 }
 
 Bad {
-  init: s0;
-  s0 -> s1 S;
-  s0 -> s9 00;
-  s0 -> s9 10;
-  s0 -> s9 11;
-  s0 -> s9 01;
-  s1 -> s9 S;
+  init: si;
+  si -> s0 S;
+  s0 -> s1 00;
+  s0 -> s1 01;
+  s0 -> s1 10;
+  s0 -> s1 11;
   s1 -> s2 00;
+  s1 -> s2 01;
   s1 -> s2 10;
-  s1 -> s3 11;
-  s1 -> s3 01;
-  s2 -> s9 S;
+  s1 -> s2 11;
   s2 -> s2 00;
+  s2 -> s2 01;
   s2 -> s2 10;
-  s2 -> s6 11;
-  s2 -> s6 01;
-  s3 -> s9 S;
-  s3 -> s4 00;
-  s3 -> s4 10;
-  s3 -> s5 11;
-  s3 -> s5 01;
-  s4 -> s9 S;
-  s4 -> s8 00;
-  s4 -> s8 10;
-  s4 -> s6 11;
-  s4 -> s6 01;
-  s5 -> s9 S;
-  s5 -> s6 00;
-  s5 -> s6 10;
-  s5 -> s7 11;
-  s5 -> s7 01;
-  s6 -> s9 S;
-  s6 -> s9 00;
-  s6 -> s9 10;
-  s6 -> s9 11;
-  s6 -> s9 01;
-  s7 -> s9 S;
-  s7 -> s6 00;
-  s7 -> s6 10;
-  s7 -> s7 11;
-  s7 -> s7 01;
-  s8 -> s9 S;
-  s8 -> s8 00;
-  s8 -> s8 10;
-  s8 -> s6 11;
-  s8 -> s6 01;
-  s9 -> s9 S;
-  s9 -> s9 00;
-  s9 -> s9 10;
-  s9 -> s9 11;
-  s9 -> s9 01;
-  accepting: s0, s1, s2, s3, s7, s8, s9;
+  s2 -> s2 11;
+  s2 -> s3 01;
+  s2 -> s3 11;
+  s3 -> s3 00;
+  s3 -> s3 01;
+  s3 -> s3 10;
+  s3 -> s3 11;
+  accepting: s3;
 }
 
 P0 {
@@ -151,7 +120,7 @@ P0 {
 
 P1 {
 init: si;
-    si -> s0 E;
+    si -> s0 S;
     s0 -> s0 00;
     s0 -> s0 01;
     s0 -> s0 10;
