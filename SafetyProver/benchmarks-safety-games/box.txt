@@ -150,7 +150,13 @@ P0 {
 }
 
 P1 {
-    init: si;
+init: si;
+    si -> s0 E;
+    s0 -> s0 00;
+    s0 -> s0 01;
+    s0 -> s0 10;
+    s0 -> s0 11;
+
     accepting: s0;
 }
 

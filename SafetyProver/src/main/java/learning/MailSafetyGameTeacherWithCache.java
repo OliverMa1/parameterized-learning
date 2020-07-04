@@ -52,7 +52,7 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
         boolean isReachable = finiteStates.isReachable(word);
         // LOGGER.debug("Word is reachable?: " + isReachable);
         // TODO exclude or include if it is not reachable?
-        if (isReachable){
+
             boolean isBad = finiteStates.isBadReachable(word);
             //  LOGGER.debug("Is "+ NoInvariantException.getLabeledWord(word) + " bad? " + isBad);
             String labeledWord = LOGGER.isDebugEnabled() ?
@@ -73,10 +73,7 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
                 // LOGGER.debug(" P1 cannot reach a bad state from the word " + labeledWord + " and it is reachable by either P0 or P1");
                 return true;
             }
-        }
-        else{
-            return false;
-        }
+
     }
 
     public boolean isCorrectLanguage(Automata hyp, CounterExample cex)
@@ -144,12 +141,17 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
             List<Integer> x = xy.x;
             String x2 = NoInvariantException.getLabeledWord(x);
             if (!finiteStates.isReachable(x)) {
-                LOGGER.debug("* Warning: " + x2 + " is a player 0 vertex that is not reachable.");
+/*                LOGGER.debug("* Warning: " + x2 + " is a player 0 vertex that is not reachable.");
                 LOGGER.debug("* Configuration " + x2 + " should be excluded from the hypothesis.");
-                addNegativeCEX(cex, x);
-                return false;
+                addNegativeCEX(cex, x);*/
+                if(!isAccepted(x)){
+                    LOGGER.debug("aaa ");
+                    addNegativeCEX(cex,x);
+                    return false;
+                }
             }
-            LOGGER.debug("Hypothesis is not inductive: ");
+            LOGGER.debug("Hypothesis is not inductive Player 0: ");
+
             for (List<Integer> y : xy.y) {
                 String y2 = NoInvariantException.getLabeledWord(y);
                 LOGGER.debug(x2 + " => " + y2);
@@ -162,10 +164,14 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
                 }
             }
             if (!cex.exists()) {
-                LOGGER.debug("* Configuration " + x2 + " should be excluded from the hypothesis.");
-                addNegativeCEX(cex, x);
+                if (!(xy.y.size() == 0)){
+                    LOGGER.debug("* Configuration " + x2 + " should be excluded from the hypothesis.");
+                    LOGGER.debug(isAccepted(x));
+                    addNegativeCEX(cex, x);
+                    return false;
+                }
+
             }
-            return false;
         }
 
         // player 1 test: is the invariant inductive? TODO: return more than one cex?
@@ -174,13 +180,17 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
         if (xy != null) {
             List<Integer> x = xy.x;
             String x2 = NoInvariantException.getLabeledWord(x);
-            if (!finiteStates.isReachable(x)) {
-                LOGGER.debug("* Warning: " + x2 + " is a player 1 vertex that is not reachable.");
+           if (!finiteStates.isReachable(x)) {
+/*                LOGGER.debug("* Warning: " + x2 + " is a player 1 vertex that is not reachable.");
                 LOGGER.debug("* Configuration " + x2 + " should be excluded from the hypothesis.");
-                addNegativeCEX(cex, x);
-                return false;
+                addNegativeCEX(cex, x);*/
+               if(!isAccepted(x)){
+
+                   cex.addNegative(x);
+                   return false;
+               }
             }
-            LOGGER.debug("Hypothesis is not inductive: ");
+            LOGGER.debug("Hypothesis is not inductive Player 1: ");
             for (List<Integer> y : xy.y) {
                 String y2 = NoInvariantException.getLabeledWord(y);
                 LOGGER.debug(x2 + " => " + y2);
