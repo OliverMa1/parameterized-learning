@@ -185,8 +185,8 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
                 LOGGER.debug("* Configuration " + x2 + " should be excluded from the hypothesis.");
                 addNegativeCEX(cex, x);*/
                if(!isAccepted(x)){
-
-                   cex.addNegative(x);
+                   if(!cex.exists()){
+                   cex.addNegative(x);}
                    return false;
                }
             }

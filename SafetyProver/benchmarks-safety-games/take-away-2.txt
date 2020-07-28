@@ -9,8 +9,6 @@ Initial {
     s1 -> s2 1;
     s2 -> s3 1;
     s3 -> s0 1;
-    s0 -> sn 0;
-    sn -> sn 0;
     accepting: s0, sn;
 }    
 
