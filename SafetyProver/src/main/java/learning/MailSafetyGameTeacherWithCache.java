@@ -51,7 +51,6 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
         //LOGGER.debug("Check if word" + NoInvariantException.getLabeledWord(word) + " is reachable:");
         boolean isReachable = finiteStates.isReachable(word);
         // LOGGER.debug("Word is reachable?: " + isReachable);
-        // TODO exclude or include if it is not reachable?
 
             boolean isBad = finiteStates.isBadReachable(word);
             //  LOGGER.debug("Is "+ NoInvariantException.getLabeledWord(word) + " bad? " + isBad);
@@ -174,7 +173,7 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
             }
         }
 
-        // player 1 test: is the invariant inductive? TODO: return more than one cex?
+        // player 1 test: is the invariant inductive?
         xy = player1_closedness(hyp);
         Timer.tick();
         if (xy != null) {
@@ -297,9 +296,7 @@ public class MailSafetyGameTeacherWithCache extends SafetyGameTeacher {
         if (u == null){
             return null;
         }
-        // TODO maybe save successors or return multiple ones instead of redoing computation
         Automata successor_of_u = AutomataUtility.getDifference(VerificationUtility.getImage(u, getTransition(), getNumLetters()), hypothesis);
-        // TODO maybe problem with termination if the same successor gets picked out again?
         List<List<Integer>> cexs = AutomataUtility.getWords(successor_of_u, u.size());
         return new Tuple2<>(u, cexs);
     }
